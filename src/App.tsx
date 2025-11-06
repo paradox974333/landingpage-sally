@@ -1,9 +1,9 @@
 import CardNav from './components/CardNav';
 import CardSwap, { Card } from './components/CardSwap';
-import TargetCursor from './components/TargetCursor';
-import FaultyTerminal from './components/FaultyTerminal';
+import Hyperspeed from './components/Hyperspeed';
 import TextType from './components/TextType';
 import logo from './logo.svg';
+import { hyperspeedPresets } from './presets/hyperspeedPresets';
 
 const App = () => {
   const navItems = [
@@ -54,28 +54,10 @@ const App = () => {
         }
       `}</style>
 
-      {/* Hero Section with FaultyTerminal Background - Green */}
+      {/* Hero Section with Hyperspeed Background */}
       <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-          <FaultyTerminal
-            scale={1.5}
-            gridMul={[2, 1]}
-            digitSize={1.2}
-            timeScale={0.5}
-            pause={false}
-            scanlineIntensity={0.5}
-            glitchAmount={0.5}
-            flickerAmount={0.3}
-            noiseAmp={0.6}
-            chromaticAberration={0}
-            dither={0}
-            curvature={0.1}
-            tint="#00ff00"
-            mouseReact={true}
-            mouseStrength={0.3}
-            pageLoadAnimation={false}
-            brightness={0.6}
-          />
+          <Hyperspeed effectOptions={hyperspeedPresets.six} />
         </div>
 
         <div className="absolute top-0 left-0 w-full z-20">
@@ -94,7 +76,7 @@ const App = () => {
         <div className="relative z-10 max-w-7xl mx-auto text-center px-4 flex flex-col items-center justify-center gap-12">
           {/* Title - Typing Effect */}
           <div style={{ animation: 'fadeInUp 1s ease-out 0s forwards', opacity: 0, marginTop: '60px' }}>
-            <div style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, fontFamily: "'Space Grotesk', sans-serif" }}>
+            <div style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, fontFamily: "'Space Grotesk', sans-serif", textShadow: '0 0 30px rgba(0, 0, 0, 0.8)' }}>
               <TextType 
                 text={["Sally AI"]}
                 typingSpeed={400}
@@ -107,7 +89,7 @@ const App = () => {
 
           {/* Subtitle - Typing Effect */}
           <div style={{ animation: 'fadeInUp 1s ease-out 0.8s forwards', opacity: 0, marginTop: '20px' }}>
-            <div style={{ fontSize: 'clamp(1.5rem, 8vw, 3.5rem)', color: 'white', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 }}>
+            <div style={{ fontSize: 'clamp(1.5rem, 8vw, 3.5rem)', color: 'white', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, textShadow: '0 0 20px rgba(0, 0, 0, 0.8)' }}>
               <TextType 
                 text={["Advanced Trading Intelligence"]}
                 typingSpeed={80}
@@ -188,13 +170,8 @@ const App = () => {
         </div>
       </div>
 
-      {/* Pricing Section with TargetCursor - Full Screen */}
+      {/* Pricing Section - Full Screen */}
       <div className="w-full h-screen bg-gradient-to-b from-[#0D0716] to-black flex flex-col items-center justify-center">
-        <TargetCursor 
-          spinDuration={2}
-          hideDefaultCursor={true}
-        />
-
         <div className="max-w-full h-full flex flex-col items-center justify-center px-4">
           <div className="text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -207,7 +184,7 @@ const App = () => {
 
           <div style={{ height: '75vh', position: 'relative', width: '100%', maxWidth: '1200px', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '1.5rem', overflow: 'hidden', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', padding: '32px', fontFamily: "'Space Grotesk', sans-serif" }}>
             {/* Basic Plan */}
-            <div className="flex-1 bg-gradient-to-br from-[#0D0716] to-[#170D27] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors cursor-target">
+            <div className="flex-1 bg-gradient-to-br from-[#0D0716] to-[#170D27] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors">
               <h3 className="text-2xl font-bold text-white mb-2">Basic</h3>
               <p className="text-gray-400 mb-6">For beginners</p>
               <div className="text-4xl font-bold text-white mb-6">$29<span className="text-lg">/mo</span></div>
@@ -222,7 +199,7 @@ const App = () => {
             </div>
 
             {/* Pro Plan */}
-            <div className="flex-1 bg-gradient-to-br from-[#170D27] to-[#271E37] rounded-lg p-8 border border-purple-500 hover:border-purple-400 transition-colors cursor-target transform scale-105">
+            <div className="flex-1 bg-gradient-to-br from-[#170D27] to-[#271E37] rounded-lg p-8 border border-purple-500 hover:border-purple-400 transition-colors transform scale-105">
               <div className="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">POPULAR</div>
               <h3 className="text-2xl font-bold text-white mb-2">Pro</h3>
               <p className="text-gray-400 mb-6">For active traders</p>
@@ -239,7 +216,7 @@ const App = () => {
             </div>
 
             {/* Enterprise Plan */}
-            <div className="flex-1 bg-gradient-to-br from-[#271E37] to-[#0D0716] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors cursor-target">
+            <div className="flex-1 bg-gradient-to-br from-[#271E37] to-[#0D0716] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors">
               <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
               <p className="text-gray-400 mb-6">For professionals</p>
               <div className="text-4xl font-bold text-white mb-6">Custom</div>
@@ -253,42 +230,6 @@ const App = () => {
                 Contact Sales
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* FaultyTerminal Section - Full Screen */}
-      <div className="w-full h-screen bg-gradient-to-b from-black via-[#0D0716] to-black flex flex-col items-center justify-center py-8">
-        <div className="w-full h-full flex flex-col items-center justify-center px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Real-time Dashboard
-            </h2>
-            <p className="text-gray-400 text-xl" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Experience live market data with retro aesthetic
-            </p>
-          </div>
-
-          <div style={{ height: '85vh', position: 'relative', width: '95%', maxWidth: '1600px', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '2rem', overflow: 'hidden', backgroundColor: '#000' }}>
-            <FaultyTerminal
-              scale={1.5}
-              gridMul={[2, 1]}
-              digitSize={1.2}
-              timeScale={1}
-              pause={false}
-              scanlineIntensity={1}
-              glitchAmount={1}
-              flickerAmount={1}
-              noiseAmp={1}
-              chromaticAberration={0}
-              dither={0}
-              curvature={0}
-              tint="#ffffff"
-              mouseReact={true}
-              mouseStrength={0.5}
-              pageLoadAnimation={false}
-              brightness={1}
-            />
           </div>
         </div>
       </div>
