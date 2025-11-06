@@ -4,8 +4,17 @@ import Hyperspeed from './components/Hyperspeed';
 import TextType from './components/TextType';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
+import { useEffect, useState } from 'react';
 
 const App = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const navItems = [
     {
       label: "About",
@@ -37,11 +46,28 @@ const App = () => {
     }
   ];
 
+  const hyperspeedConfig = {
+    ...hyperspeedPresets.six,
+    speedUp: isMobile ? 1.5 : 2,
+    totalSideLightSticks: isMobile ? 15 : 50,
+    lightPairsPerRoadWay: isMobile ? 15 : 50,
+    fov: isMobile ? 75 : 90,
+    roadWidth: isMobile ? 8 : 10,
+    carLightsFade: isMobile ? 0.3 : 0.4,
+    movingAwaySpeed: isMobile ? [40, 60] : [60, 80],
+    movingCloserSpeed: isMobile ? [-80, -120] : [-120, -160],
+  };
+
   return (
     <div className="w-full bg-black" style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
         
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -52,14 +78,60 @@ const App = () => {
             transform: translateY(0);
           }
         }
+
+        /* Hero section canvas fix */
+        #hero-canvas {
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        canvas {
+          display: block;
+          width: 100%;
+          height: 100%;
+          image-rendering: -webkit-optimize-contrast;
+        }
+
+        @media (max-width: 768px) {
+          canvas {
+            image-rendering: pixelated;
+          }
+        }
       `}</style>
 
-      {/* Hero Section with Hyperspeed Background */}
-      <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
-        <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-          <Hyperspeed effectOptions={hyperspeedPresets.six} />
+      {/* Hero Section with Hyperspeed Background - ONLY HERE */}
+      <div 
+        className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
+        style={{ 
+          position: 'relative',
+          width: '100vw',
+          height: '100vh',
+          maxWidth: '100%',
+          margin: 0,
+          padding: 0
+        }}
+      >
+        {/* Hyperspeed Background */}
+        <div 
+          id="hero-canvas"
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 0,
+            backgroundColor: '#000',
+            overflow: 'hidden'
+          }}
+        >
+          <Hyperspeed effectOptions={hyperspeedConfig} />
         </div>
 
+        {/* Navigation */}
         <div className="absolute top-0 left-0 w-full z-20">
           <CardNav
             logo={logo}
@@ -73,10 +145,36 @@ const App = () => {
           />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto text-center px-4 flex flex-col items-center justify-center gap-12">
+        {/* Content */}
+        <div 
+          className="relative z-10 w-full max-w-7xl mx-auto text-center px-4 flex flex-col items-center justify-center gap-12"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '100%',
+            padding: '0 1rem'
+          }}
+        >
           {/* Title - Typing Effect */}
-          <div style={{ animation: 'fadeInUp 1s ease-out 0s forwards', opacity: 0, marginTop: '60px' }}>
-            <div style={{ fontSize: 'clamp(5rem, 15vw, 12rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, fontFamily: "'Space Grotesk', sans-serif", textShadow: '0 0 30px rgba(0, 0, 0, 0.8)' }}>
+          <div style={{ 
+            animation: 'fadeInUp 1s ease-out 0s forwards', 
+            opacity: 0,
+            marginTop: isMobile ? '0' : '60px'
+          }}>
+            <div style={{ 
+              fontSize: isMobile ? 'clamp(2rem, 10vw, 6rem)' : 'clamp(5rem, 15vw, 12rem)', 
+              fontWeight: 900, 
+              color: 'white', 
+              letterSpacing: '-0.03em', 
+              lineHeight: 1.1, 
+              fontFamily: "'Space Grotesk', sans-serif", 
+              textShadow: '0 0 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 0, 0, 0.6)',
+              WebkitTextStroke: '0.5px rgba(255, 255, 255, 0.1)',
+              margin: 0,
+              padding: 0
+            }}>
               <TextType 
                 text={["Sally AI"]}
                 typingSpeed={400}
@@ -88,8 +186,21 @@ const App = () => {
           </div>
 
           {/* Subtitle - Typing Effect */}
-          <div style={{ animation: 'fadeInUp 1s ease-out 0.8s forwards', opacity: 0, marginTop: '20px' }}>
-            <div style={{ fontSize: 'clamp(1.5rem, 8vw, 3.5rem)', color: 'white', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, textShadow: '0 0 20px rgba(0, 0, 0, 0.8)' }}>
+          <div style={{ 
+            animation: 'fadeInUp 1s ease-out 0.8s forwards', 
+            opacity: 0,
+            marginTop: '10px'
+          }}>
+            <div style={{ 
+              fontSize: isMobile ? 'clamp(0.875rem, 5vw, 2rem)' : 'clamp(1.5rem, 8vw, 3.5rem)', 
+              color: 'white', 
+              fontFamily: "'Space Grotesk', sans-serif", 
+              fontWeight: 600, 
+              textShadow: '0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6)',
+              WebkitTextStroke: '0.3px rgba(255, 255, 255, 0.05)',
+              margin: 0,
+              padding: 0
+            }}>
               <TextType 
                 text={["Advanced Trading Intelligence"]}
                 typingSpeed={80}
@@ -100,8 +211,16 @@ const App = () => {
             </div>
           </div>
 
+          {/* Button */}
           <div style={{ animation: 'fadeInUp 0.8s ease-out 1.4s forwards', opacity: 0 }}>
-            <button className="mt-4 px-10 py-4 bg-white text-black font-bold text-lg rounded-lg hover:bg-gray-200 transition-colors duration-300" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <button 
+              className="mt-4 px-6 sm:px-8 lg:px-10 py-2 sm:py-3 lg:py-4 bg-white text-black font-bold text-sm sm:text-base lg:text-lg rounded-lg hover:bg-gray-200 active:scale-95 transition-all duration-300" 
+              style={{ 
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: isMobile ? '0.875rem' : '1rem',
+                padding: isMobile ? '0.5rem 1.5rem' : '1rem 2.5rem'
+              }}
+            >
               Get Started
             </button>
           </div>
