@@ -6,22 +6,10 @@ import { FeaturesSection } from './components/FeaturesSection';
 import { HeroParallax } from './components/hero-parallax';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
-import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
-
-// Lazy load heavy components that are below the fold
-const LazyHeroParallax = lazy(() => import('./components/hero-parallax').then(module => ({ default: module.HeroParallax })));
-const LazyCarousel = lazy(() => import('./components/Carousel').then(module => ({ default: module.Carousel })));
-const LazyFeaturesSection = lazy(() => import('./components/FeaturesSection').then(module => ({ default: module.FeaturesSection })));
-
-// Loading fallback component
-const LoadingFallback = () => (
-  <div className="w-full h-screen flex items-center justify-center bg-black">
-    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
-  </div>
-);
+import { useEffect, useState, useMemo } from 'react';
 
 const App = () => {
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     let timeoutId;
@@ -39,7 +27,6 @@ const App = () => {
     };
   }, []);
 
-  // Memoize all static data
   const navItems = useMemo(() => [
     {
       label: "About",
@@ -74,8 +61,8 @@ const App = () => {
   const hyperspeedConfig = useMemo(() => ({
     ...hyperspeedPresets.six,
     speedUp: isMobile ? 1.5 : 2,
-    totalSideLightSticks: isMobile ? 10 : 25,
-    lightPairsPerRoadWay: isMobile ? 10 : 25,
+    totalSideLightSticks: isMobile ? 10 : 30,
+    lightPairsPerRoadWay: isMobile ? 10 : 30,
     fov: isMobile ? 75 : 90,
     roadWidth: isMobile ? 8 : 10,
     carLightsFade: isMobile ? 0.3 : 0.4,
@@ -236,7 +223,7 @@ const App = () => {
         }
       `}</style>
 
-      {/* Hero Section - Load immediately (above the fold) */}
+      {/* Hero Section */}
       <div 
         className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
         style={{ 
@@ -355,14 +342,12 @@ const App = () => {
         </div>
       </div>
 
-      {/* Hero Parallax Section - Lazy loaded */}
+      {/* Hero Parallax Section */}
       <div className="w-full bg-gradient-to-b from-black via-[#0D0716] to-[#170D27]">
-        <Suspense fallback={<LoadingFallback />}>
-          <LazyHeroParallax products={products} />
-        </Suspense>
+        <HeroParallax products={products} />
       </div>
 
-      {/* Carousel Section - Lazy loaded */}
+      {/* Carousel Section */}
       <div className="relative overflow-hidden w-full min-h-screen bg-gradient-to-b from-[#170D27] via-[#0D0716] to-[#170D27] flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center mb-20 z-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -374,20 +359,16 @@ const App = () => {
         </div>
 
         <div className="w-full flex items-center justify-center z-10">
-          <Suspense fallback={<LoadingFallback />}>
-            <LazyCarousel slides={carouselSlides} />
-          </Suspense>
+          <Carousel slides={carouselSlides} />
         </div>
       </div>
 
-      {/* Features Section - Lazy loaded */}
+      {/* Features Section */}
       <div className="w-full bg-gradient-to-b from-[#170D27] via-[#0D0716] to-black">
-        <Suspense fallback={<LoadingFallback />}>
-          <LazyFeaturesSection />
-        </Suspense>
+        <FeaturesSection />
       </div>
 
-      {/* Pricing Section - Lightweight, no lazy loading needed */}
+      {/* Pricing Section */}
       <div className="w-full h-screen bg-gradient-to-b from-black to-[#0D0716] flex flex-col items-center justify-center">
         <div className="text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-8" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
