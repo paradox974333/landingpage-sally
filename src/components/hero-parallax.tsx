@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import {
   motion,
   useScroll,
@@ -8,7 +8,7 @@ import {
   MotionValue,
 } from "motion/react";
 
-export const HeroParallax = ({
+export const HeroParallax = memo(({
   products,
 }: {
   products: {
@@ -26,14 +26,16 @@ export const HeroParallax = ({
     offset: ["start start", "end start"],
   });
 
+  // OPTIMIZED: Smoother spring with better damping
   const springConfig = { stiffness: 80, damping: 25, mass: 0.5 };
 
+  // REDUCED: Less aggressive translate distances
   const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
+    useTransform(scrollYProgress, [0, 1], [0, 600]),
     springConfig
   );
   const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1000]),
+    useTransform(scrollYProgress, [0, 1], [0, -600]),
     springConfig
   );
   const rotateX = useSpring(
@@ -49,14 +51,14 @@ export const HeroParallax = ({
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(scrollYProgress, [0, 0.2], [-500, 300]),
     springConfig
   );
 
   return (
     <div
       ref={ref}
-      className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[250vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -97,9 +99,11 @@ export const HeroParallax = ({
       </motion.div>
     </div>
   );
-};
+});
 
-export const Header = () => {
+HeroParallax.displayName = 'HeroParallax';
+
+export const Header = memo(() => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
       <h1 className="text-2xl md:text-7xl font-bold dark:text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -112,9 +116,11 @@ export const Header = () => {
       </p>
     </div>
   );
-};
+});
 
-export const ProductCard = ({
+Header.displayName = 'Header';
+
+export const ProductCard = memo(({
   product,
   translate,
 }: {
@@ -132,10 +138,10 @@ export const ProductCard = ({
       }}
       whileHover={{
         y: -20,
-        transition: { duration: 0.2, ease: "easeOut" },
       }}
       key={product.title}
       className="group/product h-96 w-[30rem] relative shrink-0"
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       <a
         href={product.link}
@@ -146,6 +152,7 @@ export const ProductCard = ({
           height="600"
           width="600"
           loading="lazy"
+          decoding="async"
           className="object-cover object-left-top absolute h-full w-full inset-0 rounded-lg"
           alt={product.title}
         />
@@ -156,4 +163,6 @@ export const ProductCard = ({
       </h2>
     </motion.div>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';

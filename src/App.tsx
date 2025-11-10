@@ -6,18 +6,41 @@ import { FeaturesSection } from './components/FeaturesSection';
 import { HeroParallax } from './components/hero-parallax';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
+
+// Lazy load heavy components that are below the fold
+const LazyHeroParallax = lazy(() => import('./components/hero-parallax').then(module => ({ default: module.HeroParallax })));
+const LazyCarousel = lazy(() => import('./components/Carousel').then(module => ({ default: module.Carousel })));
+const LazyFeaturesSection = lazy(() => import('./components/FeaturesSection').then(module => ({ default: module.FeaturesSection })));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="w-full h-screen flex items-center justify-center bg-black">
+    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+  </div>
+);
 
 const App = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  const navItems = [
+  // Memoize all static data
+  const navItems = useMemo(() => [
     {
       label: "About",
       bgColor: "#0D0716",
@@ -46,9 +69,9 @@ const App = () => {
         { label: "LinkedIn", href: "https://linkedin.com", ariaLabel: "LinkedIn" }
       ]
     }
-  ];
+  ], []);
 
-  const hyperspeedConfig = {
+  const hyperspeedConfig = useMemo(() => ({
     ...hyperspeedPresets.six,
     speedUp: isMobile ? 1.5 : 2,
     totalSideLightSticks: isMobile ? 10 : 25,
@@ -58,108 +81,108 @@ const App = () => {
     carLightsFade: isMobile ? 0.3 : 0.4,
     movingAwaySpeed: isMobile ? [40, 60] : [60, 80],
     movingCloserSpeed: isMobile ? [-80, -120] : [-120, -160],
-  };
+  }), [isMobile]);
 
-  const carouselSlides = [
+  const carouselSlides = useMemo(() => [
     {
       title: "AI-Powered Trading",
       button: "Explore AI",
-      src: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Real-Time Analytics",
       button: "View Dashboard",
-      src: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Smart Indicators",
       button: "Learn More",
-      src: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Portfolio Manager",
       button: "Get Started",
-      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=75&fm=webp"
     }
-  ];
+  ], []);
 
-  const products = [
+  const products = useMemo(() => [
     {
       title: "AI Trading Bot",
       link: "#ai-trading-bot",
-      thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Live Market Analytics",
       link: "#market-analytics",
-      thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Crypto Dashboard",
       link: "#crypto-dashboard",
-      thumbnail: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Technical Indicators",
       link: "#technical-indicators",
-      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Bybit Integration",
       link: "#bybit-integration",
-      thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Risk Management",
       link: "#risk-management",
-      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Real-Time Signals",
       link: "#real-time-signals",
-      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Portfolio Tracker",
       link: "#portfolio-tracker",
-      thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Fear & Greed Index",
       link: "#fear-greed-index",
-      thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Smart Order Engine",
       link: "#smart-order-engine",
-      thumbnail: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Backtesting Suite",
       link: "#backtesting-suite",
-      thumbnail: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Trading Strategies",
       link: "#trading-strategies",
-      thumbnail: "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Market Sentiment",
       link: "#market-sentiment",
-      thumbnail: "https://images.unsplash.com/photo-1612010167108-3e6b327405f0?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1612010167108-3e6b327405f0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Automated Alerts",
       link: "#automated-alerts",
-      thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Performance Analytics",
       link: "#performance-analytics",
-      thumbnail: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=1200&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
-  ];
+  ], []);
 
   return (
     <div className="w-full bg-black" style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}>
@@ -173,11 +196,12 @@ const App = () => {
 
         html {
           scroll-behavior: smooth;
-          overflow-x: hidden;
         }
 
-        body {
-          overflow-x: hidden;
+        @media (prefers-reduced-motion: reduce) {
+          html {
+            scroll-behavior: auto;
+          }
         }
 
         @keyframes fadeInUp {
@@ -204,9 +228,15 @@ const App = () => {
           width: 100%;
           height: 100%;
         }
+
+        @media (max-width: 768px) {
+          canvas {
+            image-rendering: pixelated;
+          }
+        }
       `}</style>
 
-      {/* Hero Section */}
+      {/* Hero Section - Load immediately (above the fold) */}
       <div 
         className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
         style={{ 
@@ -325,12 +355,14 @@ const App = () => {
         </div>
       </div>
 
-      {/* Hero Parallax Section */}
+      {/* Hero Parallax Section - Lazy loaded */}
       <div className="w-full bg-gradient-to-b from-black via-[#0D0716] to-[#170D27]">
-        <HeroParallax products={products} />
+        <Suspense fallback={<LoadingFallback />}>
+          <LazyHeroParallax products={products} />
+        </Suspense>
       </div>
 
-      {/* Carousel Section */}
+      {/* Carousel Section - Lazy loaded */}
       <div className="relative overflow-hidden w-full min-h-screen bg-gradient-to-b from-[#170D27] via-[#0D0716] to-[#170D27] flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center mb-20 z-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -342,16 +374,20 @@ const App = () => {
         </div>
 
         <div className="w-full flex items-center justify-center z-10">
-          <Carousel slides={carouselSlides} />
+          <Suspense fallback={<LoadingFallback />}>
+            <LazyCarousel slides={carouselSlides} />
+          </Suspense>
         </div>
       </div>
 
-      {/* Features Section */}
+      {/* Features Section - Lazy loaded */}
       <div className="w-full bg-gradient-to-b from-[#170D27] via-[#0D0716] to-black">
-        <FeaturesSection />
+        <Suspense fallback={<LoadingFallback />}>
+          <LazyFeaturesSection />
+        </Suspense>
       </div>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - Lightweight, no lazy loading needed */}
       <div className="w-full h-screen bg-gradient-to-b from-black to-[#0D0716] flex flex-col items-center justify-center">
         <div className="text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-8" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
