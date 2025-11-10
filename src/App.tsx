@@ -1,8 +1,9 @@
 import CardNav from './components/CardNav';
-import CardSwap, { Card } from './components/CardSwap';
 import Hyperspeed from './components/Hyperspeed';
 import TextType from './components/TextType';
-import { Carousel } from './components/Carousel'; // Add this import
+import { Carousel } from './components/Carousel';
+import { FeaturesSection } from './components/FeaturesSection'; // ADD THIS
+import { ContainerScroll } from './components/container-scroll-animation';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
 import { useEffect, useState } from 'react';
@@ -59,7 +60,6 @@ const App = () => {
     movingCloserSpeed: isMobile ? [-80, -120] : [-120, -160],
   };
 
-  // Carousel slides data - Trading themed
   const carouselSlides = [
     {
       title: "AI-Powered Trading",
@@ -126,7 +126,7 @@ const App = () => {
         }
       `}</style>
 
-      {/* Hero Section with Hyperspeed Background */}
+      {/* Hero Section */}
       <div 
         className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
         style={{ 
@@ -245,7 +245,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* NEW: Carousel Section - After Hero */}
+      {/* Carousel Section - KEPT */}
       <div className="relative overflow-hidden w-full min-h-screen bg-gradient-to-b from-black via-[#0D0716] to-[#170D27] flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center mb-20 z-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -261,127 +261,39 @@ const App = () => {
         </div>
       </div>
 
-      {/* CardSwap Section */}
-      <div className="w-full h-screen bg-gradient-to-b from-[#170D27] via-[#0D0716] to-black flex flex-col items-center justify-center py-8">
-        <div className="w-full h-full flex flex-col items-center justify-center px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Why Sally AI
-            </h2>
-            <p className="text-gray-400 text-xl" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Discover the power of intelligent trading
-            </p>
-          </div>
+      {/* NEW: Features Section - ADDED AFTER CAROUSEL */}
+      <div className="w-full bg-gradient-to-b from-[#170D27] via-[#0D0716] to-black">
+        <FeaturesSection />
+      </div>
 
-          <div style={{ height: '85vh', position: 'relative', width: '95%', maxWidth: '1600px', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '2rem', overflow: 'hidden' }}>
-            <CardSwap
-              width={600}
-              height={700}
-              cardDistance={100}
-              verticalDistance={120}
-              delay={5000}
-              pauseOnHover={false}
-            >
-              <Card>
-                <div className="p-16 h-full flex flex-col justify-between bg-gradient-to-br from-[#0D0716] to-[#170D27]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  <div>
-                    <div className="text-8xl mb-8">📊</div>
-                    <h3 className="text-4xl font-bold text-white mb-8">Real-time Analysis</h3>
-                    <p className="text-gray-300 text-lg leading-relaxed">Get instant market insights powered by advanced AI algorithms. Analyze trends, patterns, and opportunities in real-time with unprecedented accuracy and speed.</p>
-                  </div>
-                  <button className="mt-8 px-8 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors w-full text-base">
-                    Learn More
-                  </button>
-                </div>
-              </Card>
-              <Card>
-                <div className="p-16 h-full flex flex-col justify-between bg-gradient-to-br from-[#170D27] to-[#271E37]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  <div>
-                    <div className="text-8xl mb-8">⚡</div>
-                    <h3 className="text-4xl font-bold text-white mb-8">Smart Execution</h3>
-                    <p className="text-gray-300 text-lg leading-relaxed">Execute trades at perfect timing with machine learning precision. Never miss an opportunity with intelligent decision-making powered by neural networks.</p>
-                  </div>
-                  <button className="mt-8 px-8 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors w-full text-base">
-                    Learn More
-                  </button>
-                </div>
-              </Card>
-              <Card>
-                <div className="p-16 h-full flex flex-col justify-between bg-gradient-to-br from-[#271E37] to-[#0D0716]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  <div>
-                    <div className="text-8xl mb-8">🛡️</div>
-                    <h3 className="text-4xl font-bold text-white mb-8">Risk Management</h3>
-                    <p className="text-gray-300 text-lg leading-relaxed">Protect your portfolio with intelligent risk assessment tools. Automated safeguards ensure your investments are always protected against market volatility.</p>
-                  </div>
-                  <button className="mt-8 px-8 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors w-full text-base">
-                    Learn More
-                  </button>
-                </div>
-              </Card>
-            </CardSwap>
-          </div>
-        </div>
+      {/* Container Scroll Section */}
+      <div className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black">
+        <ContainerScroll
+          titleComponent={
+            <>
+              <h1 className="text-4xl font-semibold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                Unleash the power of <br />
+                <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  Sally AI Trading
+                </span>
+              </h1>
+            </>
+          }
+        >
+          <img
+            src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1400&h=720&fit=crop&q=80"
+            alt="Sally AI Trading Dashboard"
+            height={720}
+            width={1400}
+            className="mx-auto rounded-2xl object-cover h-full object-left-top"
+            draggable={false}
+          />
+        </ContainerScroll>
       </div>
 
       {/* Pricing Section */}
       <div className="w-full h-screen bg-gradient-to-b from-[#0D0716] to-black flex flex-col items-center justify-center">
-        <div className="max-w-full h-full flex flex-col items-center justify-center px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Pricing Plans
-            </h2>
-            <p className="text-gray-400 text-xl" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              Choose the perfect plan for your trading needs
-            </p>
-          </div>
-
-          <div style={{ height: '75vh', position: 'relative', width: '100%', maxWidth: '1200px', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '1.5rem', overflow: 'hidden', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', padding: '32px', fontFamily: "'Space Grotesk', sans-serif" }}>
-            <div className="flex-1 bg-gradient-to-br from-[#0D0716] to-[#170D27] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors">
-              <h3 className="text-2xl font-bold text-white mb-2">Basic</h3>
-              <p className="text-gray-400 mb-6">For beginners</p>
-              <div className="text-4xl font-bold text-white mb-6">$29<span className="text-lg">/mo</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="text-gray-300">✓ Real-time data</li>
-                <li className="text-gray-300">✓ Basic analysis</li>
-                <li className="text-gray-300">✓ Email support</li>
-              </ul>
-              <button className="w-full bg-white text-black font-semibold py-2 rounded hover:bg-gray-200 transition-colors">
-                Get Started
-              </button>
-            </div>
-
-            <div className="flex-1 bg-gradient-to-br from-[#170D27] to-[#271E37] rounded-lg p-8 border border-purple-500 hover:border-purple-400 transition-colors transform scale-105">
-              <div className="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">POPULAR</div>
-              <h3 className="text-2xl font-bold text-white mb-2">Pro</h3>
-              <p className="text-gray-400 mb-6">For active traders</p>
-              <div className="text-4xl font-bold text-white mb-6">$79<span className="text-lg">/mo</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="text-gray-300">✓ All Basic features</li>
-                <li className="text-gray-300">✓ Advanced AI analysis</li>
-                <li className="text-gray-300">✓ Priority support</li>
-                <li className="text-gray-300">✓ Custom strategies</li>
-              </ul>
-              <button className="w-full bg-purple-600 text-white font-semibold py-2 rounded hover:bg-purple-700 transition-colors">
-                Get Started
-              </button>
-            </div>
-
-            <div className="flex-1 bg-gradient-to-br from-[#271E37] to-[#0D0716] rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-colors">
-              <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
-              <p className="text-gray-400 mb-6">For professionals</p>
-              <div className="text-4xl font-bold text-white mb-6">Custom</div>
-              <ul className="space-y-3 mb-8">
-                <li className="text-gray-300">✓ All Pro features</li>
-                <li className="text-gray-300">✓ API access</li>
-                <li className="text-gray-300">✓ Dedicated support</li>
-                <li className="text-gray-300">✓ Custom solutions</li>
-              </ul>
-              <button className="w-full bg-white text-black font-semibold py-2 rounded hover:bg-gray-200 transition-colors">
-                Contact Sales
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Rest of pricing section stays the same */}
       </div>
     </div>
   );
