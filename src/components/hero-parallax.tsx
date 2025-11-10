@@ -26,7 +26,8 @@ export const HeroParallax = ({
     offset: ["start start", "end start"],
   });
 
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
+  // Optimized spring config - lower stiffness for smoother motion
+  const springConfig = { stiffness: 50, damping: 20, restDelta: 0.001 };
 
   const translateX = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, 1000]),
@@ -52,10 +53,12 @@ export const HeroParallax = ({
     useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
     springConfig
   );
+
   return (
     <div
       ref={ref}
       className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      style={{ willChange: "transform" }}
     >
       <Header />
       <motion.div
@@ -64,6 +67,7 @@ export const HeroParallax = ({
           rotateZ,
           translateY,
           opacity,
+          willChange: "transform, opacity",
         }}
         className=""
       >
@@ -129,27 +133,36 @@ export const ProductCard = ({
     <motion.div
       style={{
         x: translate,
+        willChange: "transform",
       }}
       whileHover={{
         y: -20,
+        transition: { duration: 0.2 },
       }}
       key={product.title}
       className="group/product h-96 w-[30rem] relative shrink-0"
     >
       <a
         href={product.link}
-        className="block group-hover/product:shadow-2xl"
+        className="block group-hover/product:shadow-2xl transition-shadow duration-300 ease-out"
       >
         <img
           src={product.thumbnail}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          loading="lazy"
+          decoding="async"
+          className="object-cover object-left-top absolute h-full w-full inset-0 rounded-lg"
+          style={{ 
+            transform: "translateZ(0)",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
           alt={product.title}
         />
       </a>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none transition-opacity duration-300 ease-out rounded-lg"></div>
+      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white transition-opacity duration-300 ease-out text-lg font-semibold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
         {product.title}
       </h2>
     </motion.div>
