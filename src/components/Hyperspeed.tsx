@@ -2,15 +2,18 @@ import { useEffect, useRef, FC } from 'react';
 import * as THREE from 'three';
 import { BloomEffect, EffectComposer, EffectPass, RenderPass, SMAAEffect, SMAAPreset } from 'postprocessing';
 
+
 interface Distortion {
   uniforms: Record<string, { value: any }>;
   getDistortion: string;
   getJS?: (progress: number, time: number) => THREE.Vector3;
 }
 
+
 interface Distortions {
   [key: string]: Distortion;
 }
+
 
 interface Colors {
   roadColor: number;
@@ -22,6 +25,7 @@ interface Colors {
   rightCars: number[];
   sticks: number;
 }
+
 
 interface HyperspeedOptions {
   onSpeedUp?: (ev: MouseEvent | TouchEvent) => void;
@@ -53,9 +57,11 @@ interface HyperspeedOptions {
   isHyper?: boolean;
 }
 
+
 interface HyperspeedProps {
   effectOptions?: Partial<HyperspeedOptions>;
 }
+
 
 const defaultOptions: HyperspeedOptions = {
   onSpeedUp: () => {},
@@ -95,35 +101,42 @@ const defaultOptions: HyperspeedOptions = {
   }
 };
 
+
 function nsin(val: number) {
   return Math.sin(val) * 0.5 + 0.5;
 }
+
 
 const mountainUniforms = {
   uFreq: { value: new THREE.Vector3(3, 6, 10) },
   uAmp: { value: new THREE.Vector3(30, 30, 20) }
 };
 
+
 const xyUniforms = {
   uFreq: { value: new THREE.Vector2(5, 2) },
   uAmp: { value: new THREE.Vector2(25, 15) }
 };
+
 
 const LongRaceUniforms = {
   uFreq: { value: new THREE.Vector2(2, 3) },
   uAmp: { value: new THREE.Vector2(35, 10) }
 };
 
+
 const turbulentUniforms = {
   uFreq: { value: new THREE.Vector4(4, 8, 8, 1) },
   uAmp: { value: new THREE.Vector4(25, 5, 10, 10) }
 };
+
 
 const deepUniforms = {
   uFreq: { value: new THREE.Vector2(4, 8) },
   uAmp: { value: new THREE.Vector2(10, 20) },
   uPowY: { value: new THREE.Vector2(20, 2) }
 };
+
 
 const distortions: Distortions = {
   mountainDistortion: {
@@ -381,10 +394,12 @@ const distortions: Distortions = {
   }
 };
 
+
 const distortion_uniforms = {
   uDistortionX: { value: new THREE.Vector2(80, 3) },
   uDistortionY: { value: new THREE.Vector2(-40, 2.5) }
 };
+
 
 const distortion_vertex = `
   #define PI 3.14159265358979
@@ -407,12 +422,14 @@ const distortion_vertex = `
   }
 `;
 
+
 function random(base: number | [number, number]): number {
   if (Array.isArray(base)) {
     return Math.random() * (base[1] - base[0]) + base[0];
   }
   return Math.random() * base;
 }
+
 
 function pickRandom<T>(arr: T | T[]): T {
   if (Array.isArray(arr)) {
@@ -421,6 +438,7 @@ function pickRandom<T>(arr: T | T[]): T {
   return arr;
 }
 
+
 function lerp(current: number, target: number, speed = 0.1, limit = 0.001): number {
   let change = (target - current) * speed;
   if (Math.abs(change) < limit) {
@@ -428,6 +446,7 @@ function lerp(current: number, target: number, speed = 0.1, limit = 0.001): numb
   }
   return change;
 }
+
 
 class CarLights {
   webgl: App;
@@ -552,6 +571,7 @@ class CarLights {
   }
 }
 
+
 const carLightsFragment = `
   #define USE_FOG;
   ${THREE.ShaderChunk['fog_pars_fragment']}
@@ -566,6 +586,7 @@ const carLightsFragment = `
     ${THREE.ShaderChunk['fog_fragment']}
   }
 `;
+
 
 const carLightsVertex = `
   #define USE_FOG;
@@ -600,6 +621,7 @@ const carLightsVertex = `
     ${THREE.ShaderChunk['fog_vertex']}
   }
 `;
+
 
 class LightsSticks {
   webgl: App;
@@ -682,6 +704,7 @@ class LightsSticks {
   }
 }
 
+
 const sideSticksVertex = `
   #define USE_FOG;
   ${THREE.ShaderChunk['fog_pars_vertex']}
@@ -693,10 +716,10 @@ const sideSticksVertex = `
   varying vec3 vColor;
   mat4 rotationY( in float angle ) {
     return mat4(
-      cos(angle),		0,		sin(angle),	0,
-      0,		        1.0,	0,			0,
-      -sin(angle),	    0,		cos(angle),	0,
-      0, 		        0,		0,			1
+      cos(angle),   0,    sin(angle), 0,
+      0,            1.0,  0,      0,
+      -sin(angle),      0,    cos(angle), 0,
+      0,            0,    0,      1
     );
   }
   #include <getDistortion_vertex>
@@ -723,6 +746,7 @@ const sideSticksVertex = `
   }
 `;
 
+
 const sideSticksFragment = `
   #define USE_FOG;
   ${THREE.ShaderChunk['fog_pars_fragment']}
@@ -733,6 +757,7 @@ const sideSticksFragment = `
     ${THREE.ShaderChunk['fog_fragment']}
   }
 `;
+
 
 class Road {
   webgl: App;
@@ -825,6 +850,7 @@ class Road {
   }
 }
 
+
 const roadBaseFragment = `
   #define USE_FOG;
   varying vec2 vUv; 
@@ -841,9 +867,11 @@ const roadBaseFragment = `
   }
 `;
 
+
 const islandFragment = roadBaseFragment
   .replace('#include <roadMarkings_fragment>', '')
   .replace('#include <roadMarkings_vars>', '');
+
 
 const roadMarkings_vars = `
   uniform float uLanes;
@@ -862,6 +890,7 @@ const roadMarkings_vars = `
   }
 `;
 
+
 const roadMarkings_fragment = `
   uv.y = mod(uv.y + uTime * 0.05, 1.);
   float laneWidth = 1.0 / uLanes;
@@ -874,9 +903,11 @@ const roadMarkings_fragment = `
   brokenLines = mix(brokenLines, sideLines, uv.x);
 `;
 
+
 const roadFragment = roadBaseFragment
   .replace('#include <roadMarkings_fragment>', roadMarkings_fragment)
   .replace('#include <roadMarkings_vars>', roadMarkings_vars);
+
 
 const roadVertex = `
   #define USE_FOG;
@@ -899,6 +930,7 @@ const roadVertex = `
   }
 `;
 
+
 function resizeRendererToDisplaySize(
   renderer: THREE.WebGLRenderer,
   setSize: (width: number, height: number, updateStyle: boolean) => void
@@ -912,6 +944,7 @@ function resizeRendererToDisplaySize(
   }
   return needResize;
 }
+
 
 class App {
   container: HTMLElement;
@@ -945,12 +978,16 @@ class App {
     }
     this.container = container;
 
+    // ✅ PERFORMANCE FIX: Optimized renderer initialization
     this.renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      alpha: true
+      antialias: false,  // Disabled for better performance
+      alpha: true,
+      powerPreference: "high-performance"  // Force dedicated GPU usage
     });
     this.renderer.setSize(container.offsetWidth, container.offsetHeight, false);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // ✅ CRITICAL FIX: Cap pixel ratio to 1.5 to prevent high-DPI rendering lag
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
     this.composer = new EffectComposer(this.renderer);
     container.appendChild(this.renderer.domElement);
@@ -1011,11 +1048,14 @@ class App {
     window.addEventListener('resize', this.onWindowResize.bind(this));
   }
 
+  // ✅ PERFORMANCE FIX: Maintain pixel ratio cap on window resize
   onWindowResize() {
     const width = this.container.offsetWidth;
     const height = this.container.offsetHeight;
 
     this.renderer.setSize(width, height);
+    // Keep pixel ratio capped on resize
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.composer.setSize(width, height);
@@ -1216,6 +1256,7 @@ class App {
   }
 }
 
+
 const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {} }) => {
   const mergedOptions: HyperspeedOptions = {
     ...defaultOptions,
@@ -1256,5 +1297,6 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {} }) => {
 
   return <div id="lights" className="w-full h-full" ref={hyperspeed}></div>;
 };
+
 
 export default Hyperspeed;

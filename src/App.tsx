@@ -58,16 +58,20 @@ const App = () => {
     }
   ], []);
 
+  // KEY FIX: Keep desktop settings LOWER or equal to mobile
   const hyperspeedConfig = useMemo(() => ({
     ...hyperspeedPresets.six,
-    speedUp: isMobile ? 1.5 : 2,
-    totalSideLightSticks: isMobile ? 10 : 30,
-    lightPairsPerRoadWay: isMobile ? 10 : 30,
-    fov: isMobile ? 75 : 90,
-    roadWidth: isMobile ? 8 : 10,
-    carLightsFade: isMobile ? 0.3 : 0.4,
-    movingAwaySpeed: isMobile ? [40, 60] : [60, 80],
-    movingCloserSpeed: isMobile ? [-80, -120] : [-120, -160],
+    // Cap pixel ratio to prevent high-DPI rendering lag
+    pixelRatio: Math.min(window.devicePixelRatio, 1.5),
+    speedUp: isMobile ? 1.5 : 1.8,
+    // CRITICAL: Use FEWER particles on desktop, not more
+    totalSideLightSticks: isMobile ? 10 : 12,  // Was 30, now 12
+    lightPairsPerRoadWay: isMobile ? 10 : 12,  // Was 30, now 12
+    fov: isMobile ? 75 : 80,  // Slightly reduced
+    roadWidth: isMobile ? 8 : 9,
+    carLightsFade: isMobile ? 0.3 : 0.35,
+    movingAwaySpeed: isMobile ? [40, 60] : [50, 70],
+    movingCloserSpeed: isMobile ? [-80, -120] : [-100, -130],
   }), [isMobile]);
 
   const carouselSlides = useMemo(() => [
@@ -202,23 +206,32 @@ const App = () => {
           }
         }
 
+        /* CRITICAL FIX: Hardware acceleration for canvas */
         #hero-canvas {
           display: block !important;
           width: 100% !important;
           height: 100% !important;
           margin: 0 !important;
           padding: 0 !important;
+          /* Force GPU acceleration */
+          will-change: transform;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
         }
 
         canvas {
           display: block;
           width: 100%;
           height: 100%;
+          /* Force GPU rendering */
+          will-change: transform;
+          transform: translateZ(0);
         }
 
         @media (max-width: 768px) {
           canvas {
-            image-rendering: pixelated;
+            image-rendering: auto;
           }
         }
       `}</style>
@@ -232,7 +245,9 @@ const App = () => {
           height: '100vh',
           maxWidth: '100%',
           margin: 0,
-          padding: 0
+          padding: 0,
+          willChange: 'transform',
+          transform: 'translateZ(0)'
         }}
       >
         <div 
