@@ -2,8 +2,9 @@ import CardNav from './components/CardNav';
 import Hyperspeed from './components/Hyperspeed';
 import TextType from './components/TextType';
 import { Carousel } from './components/Carousel';
-import { FeaturesSection } from './components/FeaturesSection'; // ADD THIS
+import { FeaturesSection } from './components/FeaturesSection';
 import { ContainerScroll } from './components/container-scroll-animation';
+import { HeroParallax } from './components/hero-parallax';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
 import { useEffect, useState } from 'react';
@@ -81,6 +82,85 @@ const App = () => {
       button: "Get Started",
       src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80"
     }
+  ];
+
+  // Sally AI Trading Products for HeroParallax
+  const products = [
+    {
+      title: "AI Trading Bot",
+      link: "#ai-trading-bot",
+      thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Live Market Analytics",
+      link: "#market-analytics",
+      thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Crypto Dashboard",
+      link: "#crypto-dashboard",
+      thumbnail: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Technical Indicators",
+      link: "#technical-indicators",
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Bybit Integration",
+      link: "#bybit-integration",
+      thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Risk Management",
+      link: "#risk-management",
+      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Real-Time Signals",
+      link: "#real-time-signals",
+      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Portfolio Tracker",
+      link: "#portfolio-tracker",
+      thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Fear & Greed Index",
+      link: "#fear-greed-index",
+      thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Smart Order Engine",
+      link: "#smart-order-engine",
+      thumbnail: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Backtesting Suite",
+      link: "#backtesting-suite",
+      thumbnail: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Trading Strategies",
+      link: "#trading-strategies",
+      thumbnail: "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Market Sentiment",
+      link: "#market-sentiment",
+      thumbnail: "https://images.unsplash.com/photo-1612010167108-3e6b327405f0?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Automated Alerts",
+      link: "#automated-alerts",
+      thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=800&fit=crop&q=80",
+    },
+    {
+      title: "Performance Analytics",
+      link: "#performance-analytics",
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80",
+    },
   ];
 
   return (
@@ -245,8 +325,13 @@ const App = () => {
         </div>
       </div>
 
-      {/* Carousel Section - KEPT */}
-      <div className="relative overflow-hidden w-full min-h-screen bg-gradient-to-b from-black via-[#0D0716] to-[#170D27] flex flex-col items-center justify-center py-20 px-4">
+      {/* Hero Parallax Section - MOVED HERE BEFORE CAROUSEL */}
+      <div className="w-full bg-gradient-to-b from-black via-[#0D0716] to-[#170D27]">
+        <HeroParallax products={products} />
+      </div>
+
+      {/* Carousel Section */}
+      <div className="relative overflow-hidden w-full min-h-screen bg-gradient-to-b from-[#170D27] via-[#0D0716] to-[#170D27] flex flex-col items-center justify-center py-20 px-4">
         <div className="text-center mb-20 z-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Explore Trading Features
@@ -261,7 +346,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* NEW: Features Section - ADDED AFTER CAROUSEL */}
+      {/* Features Section */}
       <div className="w-full bg-gradient-to-b from-[#170D27] via-[#0D0716] to-black">
         <FeaturesSection />
       </div>
@@ -292,8 +377,15 @@ const App = () => {
       </div>
 
       {/* Pricing Section */}
-      <div className="w-full h-screen bg-gradient-to-b from-[#0D0716] to-black flex flex-col items-center justify-center">
-        {/* Rest of pricing section stays the same */}
+      <div className="w-full h-screen bg-gradient-to-b from-black to-[#0D0716] flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-8" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            Choose Your Plan
+          </h2>
+          <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            Pricing content coming soon
+          </p>
+        </div>
       </div>
     </div>
   );
