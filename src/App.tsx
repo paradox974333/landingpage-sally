@@ -7,18 +7,30 @@ import { ContainerScroll } from './components/container-scroll-animation';
 import { HeroParallax } from './components/hero-parallax';
 import logo from './logo.svg';
 import { hyperspeedPresets } from './presets/hyperspeedPresets';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 
 const App = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // Debounced resize handler for better performance
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  const navItems = [
+  // Memoize static data to prevent re-creation [web:31][web:40]
+  const navItems = useMemo(() => [
     {
       label: "About",
       bgColor: "#0D0716",
@@ -47,130 +59,151 @@ const App = () => {
         { label: "LinkedIn", href: "https://linkedin.com", ariaLabel: "LinkedIn" }
       ]
     }
-  ];
+  ], []);
 
-  const hyperspeedConfig = {
+  // Optimize Hyperspeed for mobile devices [web:42][web:45]
+  const hyperspeedConfig = useMemo(() => ({
     ...hyperspeedPresets.six,
     speedUp: isMobile ? 1.5 : 2,
-    totalSideLightSticks: isMobile ? 15 : 50,
-    lightPairsPerRoadWay: isMobile ? 15 : 50,
+    totalSideLightSticks: isMobile ? 12 : 35,
+    lightPairsPerRoadWay: isMobile ? 12 : 35,
     fov: isMobile ? 75 : 90,
     roadWidth: isMobile ? 8 : 10,
     carLightsFade: isMobile ? 0.3 : 0.4,
     movingAwaySpeed: isMobile ? [40, 60] : [60, 80],
     movingCloserSpeed: isMobile ? [-80, -120] : [-120, -160],
-  };
+  }), [isMobile]);
 
-  const carouselSlides = [
+  // Optimized image URLs with WebP format [web:42][web:45]
+  const carouselSlides = useMemo(() => [
     {
       title: "AI-Powered Trading",
       button: "Explore AI",
-      src: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Real-Time Analytics",
       button: "View Dashboard",
-      src: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Smart Indicators",
       button: "Learn More",
-      src: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=75&fm=webp"
     },
     {
       title: "Portfolio Manager",
       button: "Get Started",
-      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80"
+      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=75&fm=webp"
     }
-  ];
+  ], []);
 
-  // Sally AI Trading Products for HeroParallax
-  const products = [
+  // High-quality WebP images for HeroParallax [web:42][web:45]
+  const products = useMemo(() => [
     {
       title: "AI Trading Bot",
       link: "#ai-trading-bot",
-      thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Live Market Analytics",
       link: "#market-analytics",
-      thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Crypto Dashboard",
       link: "#crypto-dashboard",
-      thumbnail: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Technical Indicators",
       link: "#technical-indicators",
-      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Bybit Integration",
       link: "#bybit-integration",
-      thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Risk Management",
       link: "#risk-management",
-      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Real-Time Signals",
       link: "#real-time-signals",
-      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Portfolio Tracker",
       link: "#portfolio-tracker",
-      thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Fear & Greed Index",
       link: "#fear-greed-index",
-      thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Smart Order Engine",
       link: "#smart-order-engine",
-      thumbnail: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Backtesting Suite",
       link: "#backtesting-suite",
-      thumbnail: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Trading Strategies",
       link: "#trading-strategies",
-      thumbnail: "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Market Sentiment",
       link: "#market-sentiment",
-      thumbnail: "https://images.unsplash.com/photo-1612010167108-3e6b327405f0?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1612010167108-3e6b327405f0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Automated Alerts",
       link: "#automated-alerts",
-      thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
     {
       title: "Performance Analytics",
       link: "#performance-analytics",
-      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=800&fit=crop&q=80",
+      thumbnail: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=1200&h=800&fit=crop&q=75&fm=webp",
     },
-  ];
+  ], []);
 
   return (
     <div className="w-full bg-black" style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap&display=swap');
         
         * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Smooth scroll behavior [web:41][web:44] */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Respect user preferences for reduced motion [web:41][web:44] */
+        @media (prefers-reduced-motion: reduce) {
+          html {
+            scroll-behavior: auto;
+          }
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
         }
 
         @keyframes fadeInUp {
@@ -203,6 +236,12 @@ const App = () => {
           canvas {
             image-rendering: pixelated;
           }
+        }
+
+        /* Optimize image loading [web:45] */
+        img {
+          content-visibility: auto;
+          contain-intrinsic-size: 0 500px;
         }
       `}</style>
 
@@ -325,7 +364,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* Hero Parallax Section - MOVED HERE BEFORE CAROUSEL */}
+      {/* Hero Parallax Section */}
       <div className="w-full bg-gradient-to-b from-black via-[#0D0716] to-[#170D27]">
         <HeroParallax products={products} />
       </div>
@@ -366,10 +405,12 @@ const App = () => {
           }
         >
           <img
-            src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1400&h=720&fit=crop&q=80"
+            src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1400&h=720&fit=crop&q=75&fm=webp"
             alt="Sally AI Trading Dashboard"
             height={720}
             width={1400}
+            loading="lazy"
+            decoding="async"
             className="mx-auto rounded-2xl object-cover h-full object-left-top"
             draggable={false}
           />
@@ -391,4 +432,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default memo(App);
