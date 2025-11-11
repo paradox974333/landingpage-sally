@@ -405,7 +405,8 @@ Millions trade — but only few truly understand the movement.
 And now… the game changes`}
         animateOn="view"
         revealDirection="start"
-        speed={100}
+        speed={85}
+        sequential={true}
       />
     </div>
   </div>
