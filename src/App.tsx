@@ -160,12 +160,12 @@ function NavbarDemo() {
       link: "#features",
     },
     {
-      name: "Pricing",
+      name: "Demo",
       link: "#pricing",
     },
     {
-      name: "Contact",
-      link: "#contact",
+      name: "About",
+      link: "https://imperialx.io/whitepaper",
     },
   ];
 
@@ -180,7 +180,7 @@ function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Book a call</NavbarButton>
+            <NavbarButton variant="primary">Get Access</NavbarButton>
           </div>
         </NavBody>
 
@@ -221,7 +221,7 @@ function NavbarDemo() {
                 variant="primary"
                 className="w-full"
               >
-                Book a call
+                Get Access
               </NavbarButton>
             </div>
           </MobileNavMenu>
