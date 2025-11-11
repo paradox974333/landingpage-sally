@@ -2,7 +2,17 @@
 
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
-import CardNav from "./components/CardNav";
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "./components/resizable-navbar";
 import Hyperspeed from "./components/Hyperspeed";
 import TextType from "./components/TextType";
 import logo from "./logo.svg";
@@ -142,6 +152,85 @@ const data = [
   },
 ];
 
+// Navbar Component
+function NavbarDemo() {
+  const navItems = [
+    {
+      name: "Features",
+      link: "#features",
+    },
+    {
+      name: "Pricing",
+      link: "#pricing",
+    },
+    {
+      name: "Contact",
+      link: "#contact",
+    },
+  ];
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="relative w-full">
+      <Navbar>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+          <div className="flex items-center gap-4">
+            <NavbarButton variant="secondary">Login</NavbarButton>
+            <NavbarButton variant="primary">Book a call</NavbarButton>
+          </div>
+        </NavBody>
+
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </MobileNavHeader>
+
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
+                <span className="block">{item.name}</span>
+              </a>
+            ))}
+            <div className="flex w-full flex-col gap-4">
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Login
+              </NavbarButton>
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Book a call
+              </NavbarButton>
+            </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
+    </div>
+  );
+}
+
 const App = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -159,40 +248,6 @@ const App = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const navItems = useMemo(
-    () => [
-      {
-        label: "About",
-        bgColor: "#0D0716",
-        textColor: "#fff",
-        links: [
-          { label: "Company", href: "#about-company", ariaLabel: "About Company" },
-          { label: "Careers", href: "#about-careers", ariaLabel: "About Careers" },
-        ],
-      },
-      {
-        label: "Projects",
-        bgColor: "#170D27",
-        textColor: "#fff",
-        links: [
-          { label: "Featured", href: "#features", ariaLabel: "Features" },
-          { label: "Case Studies", href: "#features", ariaLabel: "Features" },
-        ],
-      },
-      {
-        label: "Contact",
-        bgColor: "#271E37",
-        textColor: "#fff",
-        links: [
-          { label: "Email", href: "mailto:hello@example.com", ariaLabel: "Email us" },
-          { label: "Twitter", href: "https://twitter.com", ariaLabel: "Twitter" },
-          { label: "LinkedIn", href: "https://linkedin.com", ariaLabel: "LinkedIn" },
-        ],
-      },
-    ],
-    []
-  );
 
   const hyperspeedConfig = useMemo(
     () => ({
@@ -236,16 +291,7 @@ const App = () => {
         </div>
 
         <div className="absolute top-0 left-0 w-full z-20">
-          <CardNav
-            logo={logo}
-            logoAlt="Company Logo"
-            items={navItems}
-            baseColor="#fff"
-            menuColor="#000"
-            buttonBgColor="#111"
-            buttonTextColor="#fff"
-            ease="power3.out"
-          />
+          <NavbarDemo />
         </div>
 
         <div
@@ -297,36 +343,34 @@ const App = () => {
 
       {/* ScrollReveal added after hero with small gap and slower reveal */}
       {/* ScrollReveal section with proper setup */}
-{/* Bridge section: slow, pinned reveal */}
-<section
-  id="reveal-bridge"
-  className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
->
-  <div className="max-w-4xl mx-auto px-4 py-24 md:py-40">
-    <ScrollReveal
-      baseOpacity={0}
-      enableBlur
-      baseRotation={6}
-      blurStrength={10}
-      start="center center"     // when the bridge hits the top of viewport
-      end="+=60%"        // long distance = slower reveal
-      scrub={1.9}         // smooth, scroll-linked
-      pin={true}          // hold this section “between” others
-      anticipatePin={1}   // reduce pin jump
-      markers={false}     // set true to debug
-      textClassName="text-white text-center"
-    >
-    The market never sleeps.
-Every second, prices breathe, rise, collapse, and rise again.
-Millions trade — but only few truly understand the movement.
+      {/* Bridge section: slow, pinned reveal */}
+      <section
+        id="reveal-bridge"
+        className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
+      >
+        <div className="max-w-4xl mx-auto px-4 py-24 md:py-40">
+          <ScrollReveal
+            baseOpacity={0}
+            enableBlur
+            baseRotation={6}
+            blurStrength={10}
+            start="center center"     // when the bridge hits the top of viewport
+            end="+=60%"        // long distance = slower reveal
+            scrub={1.9}         // smooth, scroll-linked
+            pin={true}          // hold this section "between" others
+            anticipatePin={1}   // reduce pin jump
+            markers={false}     // set true to debug
+            textClassName="text-white text-center"
+          >
+            The market never sleeps.
+            Every second, prices breathe, rise, collapse, and rise again.
+            Millions trade — but only few truly understand the movement.
 
-And now… the game changes.
+            And now… the game changes.
 
-    </ScrollReveal>
-  </div>
-</section>
-
-
+          </ScrollReveal>
+        </div>
+      </section>
 
       {/* Centered Intro between hero and features */}
       <section id="intro" className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-20 px-4">
