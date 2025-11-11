@@ -22,7 +22,7 @@ import FeaturesSection from "./components/FeaturesSection";
 // Apple Cards Carousel (embedded component)
 import { Carousel, Card } from "@/components/apple-cards-carousel";
 
-import ScrollReveal from './components/ScrollReveal';
+import DecryptedText from './components/DecryptedText';
 
 export function AppleCardsCarouselDemo() {
   const cards = data.map((card, index) => (
@@ -266,7 +266,10 @@ const App = () => {
   );
 
   return (
-    <div className="w-full bg-black" style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}>
+    <div
+      className="w-full bg-black"
+      style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -281,11 +284,29 @@ const App = () => {
       {/* Hero Section */}
       <div
         className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
-        style={{ position: "relative", width: "100vw", height: "100vh", maxWidth: "100%", margin: 0, padding: 0, willChange: "transform", transform: "translateZ(0)" }}
+        style={{
+          position: "relative",
+          width: "100vw",
+          height: "100vh",
+          maxWidth: "100%",
+          margin: 0,
+          padding: 0,
+          willChange: "transform",
+          transform: "translateZ(0)",
+        }}
       >
         <div
           id="hero-canvas"
-          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0, backgroundColor: "#000", overflow: "hidden" }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 0,
+            backgroundColor: "#000",
+            overflow: "hidden",
+          }}
         >
           <Hyperspeed effectOptions={hyperspeedConfig} />
         </div>
@@ -296,9 +317,22 @@ const App = () => {
 
         <div
           className="relative z-10 w-full max-w-7xl mx-auto text-center px-4 flex flex-col items-center justify-center gap-12"
-          style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "100%", padding: "0 1rem" }}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "100%",
+            padding: "0 1rem",
+          }}
         >
-          <div style={{ animation: "fadeInUp 1s ease-out 0s forwards", opacity: 0, marginTop: isMobile ? "0" : "60px" }}>
+          <div
+            style={{
+              animation: "fadeInUp 1s ease-out 0s forwards",
+              opacity: 0,
+              marginTop: isMobile ? "0" : "60px",
+            }}
+          >
             <div
               style={{
                 fontSize: isMobile ? "clamp(2rem, 10vw, 6rem)" : "clamp(5rem, 15vw, 12rem)",
@@ -315,7 +349,13 @@ const App = () => {
             </div>
           </div>
 
-          <div style={{ animation: "fadeInUp 1s ease-out 0.8s forwards", opacity: 0, marginTop: "10px" }}>
+          <div
+            style={{
+              animation: "fadeInUp 1s ease-out 0.8s forwards",
+              opacity: 0,
+              marginTop: "10px",
+            }}
+          >
             <div
               style={{
                 fontSize: isMobile ? "clamp(0.875rem, 5vw, 2rem)" : "clamp(1.5rem, 8vw, 3.5rem)",
@@ -330,10 +370,19 @@ const App = () => {
             </div>
           </div>
 
-          <div style={{ animation: "fadeInUp 0.8s ease-out 1.4s forwards", opacity: 0 }}>
+          <div
+            style={{
+              animation: "fadeInUp 0.8s ease-out 1.4s forwards",
+              opacity: 0,
+            }}
+          >
             <button
               className="mt-4 px-6 sm:px-8 lg:px-10 py-2 sm:py-3 lg:py-4 bg-white text-black font-bold text-sm sm:text-base lg:text-lg rounded-lg hover:bg-gray-200 active:scale-95 transition-all duration-300"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: isMobile ? "0.875rem" : "1rem", padding: isMobile ? "0.5rem 1.5rem" : "1rem 2.5rem" }}
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: isMobile ? "0.875rem" : "1rem",
+                padding: isMobile ? "0.5rem 1.5rem" : "1rem 2.5rem",
+              }}
             >
               Get Started
             </button>
@@ -341,36 +390,27 @@ const App = () => {
         </div>
       </div>
 
-      {/* ScrollReveal added after hero with small gap and slower reveal */}
-      {/* ScrollReveal section with proper setup */}
-      {/* Bridge section: slow, pinned reveal */}
+      {/* Replacing ScrollReveal section with DecryptedText usages */}
       <section
-        id="reveal-bridge"
-        className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
-      >
-        <div className="max-w-4xl mx-auto px-4 py-24 md:py-40">
-          <ScrollReveal
-            baseOpacity={0}
-            enableBlur
-            baseRotation={6}
-            blurStrength={10}
-            start="center center"     // when the bridge hits the top of viewport
-            end="+=60%"        // long distance = slower reveal
-            scrub={1.9}         // smooth, scroll-linked
-            pin={true}          // hold this section "between" others
-            anticipatePin={1}   // reduce pin jump
-            markers={false}     // set true to debug
-            textClassName="text-white text-center"
-          >
-            The market never sleeps.
-            Every second, prices breathe, rise, collapse, and rise again.
-            Millions trade — but only few truly understand the movement.
+  id="reveal-bridge"
+  className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
+>
+  <div className="max-w-4xl mx-auto px-4 py-24 md:py-40 text-white text-center">
+    <div style={{ marginTop: "6rem", fontSize: "1.75rem", lineHeight: 1.5 }}>
+      <DecryptedText
+        text={`The market never sleeps.
+Every second, prices breathe, rise, collapse, and rise again.
+Millions trade — but only few truly understand the movement.
 
-            And now… the game changes.
+And now… the game changes`}
+        animateOn="view"
+        revealDirection="start"
+        speed={100}
+      />
+    </div>
+  </div>
+</section>
 
-          </ScrollReveal>
-        </div>
-      </section>
 
       {/* Centered Intro between hero and features */}
       <section id="intro" className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-20 px-4">
