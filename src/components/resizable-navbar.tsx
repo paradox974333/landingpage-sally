@@ -224,9 +224,9 @@ export const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return isOpen ? (
-    <IconX className="text-black dark:text-white" onClick={onClick} />
+    <IconX className="text-white" onClick={onClick} />
   ) : (
-    <IconMenu2 className="text-black dark:text-white" onClick={onClick} />
+    <IconMenu2 className="text-white" onClick={onClick} />
   );
 };
 
@@ -237,7 +237,8 @@ export const NavbarLogo = () => {
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
       <img
-        src="https://assets.aceternity.com/logo-dark.png"
+        src="src/logo.svg"
+        style={{ filter: "invert(1) brightness(2)" }}
         alt="logo"
         width={30}
         height={30}
