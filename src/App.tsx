@@ -35,7 +35,7 @@ function NavbarDemo() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <NavbarButton variant="secondary">Login</NavbarButton>
             <Link to="/wishlist">
               <NavbarButton variant="primary">Get Access</NavbarButton>
@@ -157,7 +157,7 @@ export function CarouselDemo() {
   ];
 
   return (
-    <div className="relative w-full h-screen flex items-center justify-center">
+    <div className="relative w-full h-[100svh] md:h-screen flex items-center justify-center bg-black">
       <Carousel slides={slideData} />
     </div>
   );
@@ -187,25 +187,31 @@ function Home() {
 
       {/* Navbar placed above the carousel, fixed */}
       <header className="w-full z-50 bg-transparent fixed top-0 left-0">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <NavbarDemo />
         </div>
       </header>
 
       {/* Carousel Hero Section - Full Height */}
-      <main className="w-full pt-[4.5rem]">
-        <section className="relative w-full h-screen overflow-hidden">
+      <main
+        className="w-full"
+        style={{
+          // Add safe-area padding plus navbar height to prevent overlap on devices with notches
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)",
+        }}
+      >
+        <section className="relative w-full h-[100svh] md:h-screen overflow-hidden bg-black">
           <CarouselDemo />
         </section>
 
         {/* Intro Section */}
         <section
           id="intro"
-          className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-20 px-4"
+          className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-14 sm:py-20 px-3 sm:px-4"
         >
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white">Introducing Sally</h2>
-            <p className="mt-4 text-lg md:text-xl text-gray-300">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white">Introducing Sally</h2>
+            <p className="mt-4 text-base md:text-xl text-gray-300">
               An AI trading agent for market analysis, automated execution, and dynamic portfolio rebalancing—built to operate 24/7 with risk-first controls.
             </p>
             <div className="mt-8">
@@ -221,7 +227,7 @@ function Home() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="w-full bg-black py-10 md:py-16 px-4">
+        <section id="features" className="w-full bg-black py-10 md:py-16 px-3 sm:px-4">
           <FeaturesSection />
         </section>
       </main>
