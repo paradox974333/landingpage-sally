@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+
 import {
   Navbar,
   NavBody,
@@ -13,6 +15,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "./components/resizable-navbar";
+
 import Hyperspeed from "./components/Hyperspeed";
 import TextType from "./components/TextType";
 import logo from "./logo.svg";
@@ -22,9 +25,10 @@ import FeaturesSection from "./components/FeaturesSection";
 // Apple Cards Carousel (embedded component)
 import { Carousel, Card } from "@/components/apple-cards-carousel";
 
-import DecryptedText from './components/DecryptedText';
+import DecryptedText from "./components/DecryptedText";
+import { WishlistForm } from "./components/WishlistForm";
 
-export function AppleCardsCarouselDemo() {
+function AppleCardsCarouselDemo() {
   const cards = data.map((card, index) => (
     <Card key={card.src} card={card} index={index} />
   ));
@@ -39,7 +43,13 @@ export function AppleCardsCarouselDemo() {
   );
 }
 
-const DummyContent = ({ title, features }: { title: string; features: string[] }) => {
+const DummyContent = ({
+  title,
+  features,
+}: {
+  title: string;
+  features: string[];
+}) => {
   return (
     <>
       {features.map((feature, index) => (
@@ -180,7 +190,9 @@ function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Get Access</NavbarButton>
+            <Link to="/wishlist">
+              <NavbarButton variant="primary">Get Access</NavbarButton>
+            </Link>
           </div>
         </NavBody>
 
@@ -216,13 +228,15 @@ function NavbarDemo() {
               >
                 Login
               </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Get Access
-              </NavbarButton>
+              <Link to="/wishlist" className="w-full">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Get Access
+                </NavbarButton>
+              </Link>
             </div>
           </MobileNavMenu>
         </MobileNav>
@@ -231,10 +245,13 @@ function NavbarDemo() {
   );
 }
 
-const App = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+function Home() {
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Initialize isMobile after mount
+    setIsMobile(window.innerWidth < 768);
+
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(timeoutId);
@@ -259,8 +276,12 @@ const App = () => {
       fov: isMobile ? 75 : 80,
       roadWidth: isMobile ? 8 : 9,
       carLightsFade: isMobile ? 0.3 : 0.35,
-      movingAwaySpeed: isMobile ? [40, 60] as [number, number] : [50, 70] as [number, number],
-      movingCloserSpeed: isMobile ? [-80, -120] as [number, number] : [-100, -130] as [number, number],
+      movingAwaySpeed: isMobile
+        ? ([40, 60] as [number, number])
+        : ([50, 70] as [number, number]),
+      movingCloserSpeed: isMobile
+        ? ([-80, -120] as [number, number])
+        : ([-100, -130] as [number, number]),
     }),
     [isMobile]
   );
@@ -335,17 +356,26 @@ const App = () => {
           >
             <div
               style={{
-                fontSize: isMobile ? "clamp(2rem, 10vw, 6rem)" : "clamp(5rem, 15vw, 12rem)",
+                fontSize: isMobile
+                  ? "clamp(2rem, 10vw, 6rem)"
+                  : "clamp(5rem, 15vw, 12rem)",
                 fontWeight: 900,
                 color: "white",
                 letterSpacing: "-0.03em",
                 lineHeight: 1.1,
                 fontFamily: "'Space Grotesk', sans-serif",
-                textShadow: "0 0 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 0, 0, 0.6)",
+                textShadow:
+                  "0 0 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 0, 0, 0.6)",
                 WebkitTextStroke: "0.5px rgba(255, 255, 255, 0.1)",
               }}
             >
-              <TextType text={["Sally AI"]} typingSpeed={400} pauseDuration={0} showCursor={true} cursorCharacter="|" />
+              <TextType
+                text={["Sally AI"]}
+                typingSpeed={400}
+                pauseDuration={0}
+                showCursor={true}
+                cursorCharacter="|"
+              />
             </div>
           </div>
 
@@ -358,15 +388,24 @@ const App = () => {
           >
             <div
               style={{
-                fontSize: isMobile ? "clamp(0.875rem, 5vw, 2rem)" : "clamp(1.5rem, 8vw, 3.5rem)",
+                fontSize: isMobile
+                  ? "clamp(0.875rem, 5vw, 2rem)"
+                  : "clamp(1.5rem, 8vw, 3.5rem)",
                 color: "white",
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: 600,
-                textShadow: "0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6)",
+                textShadow:
+                  "0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.6)",
                 WebkitTextStroke: "0.3px rgba(255, 255, 255, 0.05)",
               }}
             >
-              <TextType text={["Advanced Trading Intelligence"]} typingSpeed={80} pauseDuration={0} showCursor={true} cursorCharacter="_" />
+              <TextType
+                text={["Advanced Trading Intelligence"]}
+                typingSpeed={80}
+                pauseDuration={0}
+                showCursor={true}
+                cursorCharacter="_"
+              />
             </div>
           </div>
 
@@ -376,49 +415,55 @@ const App = () => {
               opacity: 0,
             }}
           >
-            <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-2 text-sm font-semibold leading-6 text-white inline-block">
-  <span className="absolute inset-0 overflow-hidden rounded-full">
-    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-  </span>
-  <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-1.5 px-6 ring-1 ring-white/10 ">
-    <span>Get Access</span>
-  </div>
-  <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
-</button>
-
+            <Link to="/wishlist">
+              <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-2 text-sm font-semibold leading-6 text-white inline-block">
+                <span className="absolute inset-0 overflow-hidden rounded-full">
+                  <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </span>
+                <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-1.5 px-6 ring-1 ring-white/10 ">
+                  <span>Get Access</span>
+                </div>
+                <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
+              </button>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Replacing ScrollReveal section with DecryptedText usages */}
       <section
-  id="reveal-bridge"
-  className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
->
-  <div className="max-w-4xl mx-auto px-4 py-24 md:py-40 text-white text-center">
-    <div style={{ marginTop: "6rem", fontSize: "1.75rem", lineHeight: 1.5 }}>
-      <DecryptedText
-        text={`The market never sleeps.
+        id="reveal-bridge"
+        className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black"
+      >
+        <div className="max-w-4xl mx-auto px-4 py-24 md:py-40 text-white text-center">
+          <div style={{ marginTop: "6rem", fontSize: "1.75rem", lineHeight: 1.5 }}>
+            <DecryptedText
+              text={`The market never sleeps.
 Every second, prices breathe, rise, collapse, and rise again.
 Millions trade — but only few truly understand the movement.
 
 And now… the game changes`}
-        animateOn="view"
-        revealDirection="start"
-        speed={40}
-        sequential={true}
-      />
-    </div>
-  </div>
-</section>
-
+              animateOn="view"
+              revealDirection="start"
+              speed={60}
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Centered Intro between hero and features */}
-      <section id="intro" className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-20 px-4">
+      <section
+        id="intro"
+        className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-20 px-4"
+      >
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white">Introducing Sally</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white">
+            Introducing Sally
+          </h2>
           <p className="mt-4 text-lg md:text-xl text-gray-300">
-            An AI trading agent for market analysis, automated execution, and dynamic portfolio rebalancing—built to operate 24/7 with risk-first controls.
+            An AI trading agent for market analysis, automated execution, and
+            dynamic portfolio rebalancing—built to operate 24/7 with risk-first
+            controls.
           </p>
         </div>
       </section>
@@ -429,11 +474,21 @@ And now… the game changes`}
       </section>
 
       {/* Apple Cards Carousel (seamlessly integrated) */}
-      <section id="carousel" className="w-full bg-gradient-to-b from-black via-[#0a0a0a] to-black">
+      <section
+        id="carousel"
+        className="w-full bg-gradient-to-b from-black via-[#0a0a0a] to-black"
+      >
         <AppleCardsCarouselDemo />
       </section>
     </div>
   );
-};
+}
 
-export default App;
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/wishlist" element={<WishlistForm />} />
+    </Routes>
+  );
+}
