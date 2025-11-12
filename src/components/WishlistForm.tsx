@@ -3,7 +3,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useMotionTemplate, useMotionValue, motion } from "motion/react";
-import DarkVeil from "./DarkVeil"; // 🕶️ Full-screen DarkVeil background
+import AnoAI from "@/components/animated-shader-background"; // ✨ New Animated Shader Background
 
 // Local cn helper
 function cn(...inputs: Array<string | undefined>) {
@@ -18,10 +18,10 @@ export function WishlistForm() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-20 overflow-hidden">
-      {/* 🕶️ Full-screen DarkVeil background */}
+      {/* ✨ Full-screen AnoAI background */}
       <div className="absolute inset-0 -z-10">
-        <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-          <DarkVeil />
+        <div className="w-full h-screen bg-black">
+          <AnoAI />
         </div>
       </div>
 
