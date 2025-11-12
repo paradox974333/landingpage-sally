@@ -964,7 +964,7 @@ class App {
     const aspect = Math.max(1, initWidth) / Math.max(1, initHeight);
     this.camera = new THREE.PerspectiveCamera(options.fov, aspect, 0.1, 10000);
     this.camera.position.z = -5;
-    this.camera.position.y = 8;
+    this.camera.position.y = 4;
     this.camera.position.x = 0;
 
     this.scene = new THREE.Scene();
