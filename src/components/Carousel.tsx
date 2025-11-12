@@ -62,7 +62,7 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
 
         <div className="absolute inset-0 flex flex-col items-center justify-end p-6 sm:p-8 text-center">
           <article className="w-full max-w-xl">
-            <h3 className="text-xs sm:text-sm tracking-widest text-white/80 uppercase">Sally AI</h3>
+            <h3 className="text-xs sm:text-sm tracking-widest text-white/80 uppercase"></h3>
             <h2 className="mt-1 text-2xl md:text-4xl lg:text-5xl font-semibold text-white drop-shadow">
               {title}
             </h2>
