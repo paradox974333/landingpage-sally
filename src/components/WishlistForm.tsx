@@ -3,19 +3,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useMotionTemplate, useMotionValue, motion } from "motion/react";
-import AnoAI from "@/components/animated-shader-background"; // ✨ New Animated Shader Background
+import AnoAI from "@/components/animated-shader-background";
 
 // Local cn helper
 function cn(...inputs: Array<string | undefined>) {
   return inputs.filter(Boolean).join(" ");
 }
 
-type ToastType = "loading" | "success" | "error";
-
 export function WishlistForm() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // Minimal toast state (no new packages, single-line message)
+  // Simple inline toast state
+  type ToastType = "loading" | "success" | "error";
   const [toast, setToast] = React.useState<{
     open: boolean;
     type: ToastType;
@@ -24,15 +23,12 @@ export function WishlistForm() {
 
   const hideTimerRef = React.useRef<number | null>(null);
 
-  const showToast = (type: ToastType, message: string, autoHideMs = 3000) => {
-    // Clear any previous auto-hide
+  const showToast = (type: ToastType, message: string, autoHideMs = 4000) => {
+    setToast({ open: true, type, message });
     if (hideTimerRef.current) {
       clearTimeout(hideTimerRef.current);
       hideTimerRef.current = null;
     }
-    setToast({ open: true, type, message });
-
-    // Auto-hide after duration
     hideTimerRef.current = window.setTimeout(() => {
       setToast((t) => ({ ...t, open: false }));
       hideTimerRef.current = null;
@@ -43,7 +39,7 @@ export function WishlistForm() {
     e.preventDefault();
 
     setIsSubmitting(true);
-    showToast("loading", "Joining waitlist…", 10000); // longer while network in-flight
+    showToast("loading", "Joining waitlist...", 10000);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -53,22 +49,30 @@ export function WishlistForm() {
         "https://hook.eu2.make.com/ra6ioi2vs3fqvn3cstzeodowbllwd2ta",
         {
           method: "POST",
-          body: formData, // FormData lets fetch set multipart/form-data with boundary
+          body: formData,
         }
       );
 
       if (!res.ok) {
         console.error("Webhook error:", res.status, res.statusText);
-        showToast("error", "Something went wrong. Please try again.", 4000);
+        showToast(
+          "error",
+          "Something went wrong. Please try again.",
+          5000
+        );
         setIsSubmitting(false);
         return;
       }
 
-      showToast("success", "You’re on the waitlist. 🎉", 4000);
+      showToast(
+        "success",
+        "Welcome to Sally AI! You're now on the waitlist. 🎉",
+        5000
+      );
       form.reset();
     } catch (err) {
       console.error("Network error:", err);
-      showToast("error", "Network error. Try again.", 4000);
+      showToast("error", "Network error. Please try again.", 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -76,8 +80,8 @@ export function WishlistForm() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-20 overflow-hidden">
-      {/* Minimal toast (accessible, no icons, no progress bar) */}
-      <MinimalToast open={toast.open} type={toast.type} message={toast.message} />
+      {/* ✨ Liquid Glass Toast */}
+      <LiquidGlassToast open={toast.open} type={toast.type} message={toast.message} />
 
       {/* ✨ Full-screen AnoAI background */}
       <div className="absolute inset-0 -z-10">
@@ -166,41 +170,76 @@ export function WishlistForm() {
   );
 }
 
-// ================= Minimal Toast (no new imports) =================
-function MinimalToast(props: {
-  open: boolean;
-  type: ToastType;
+// ✨ Liquid Glass Toast Component, now top and full width
+function LiquidGlassToast(props: { 
+  open: boolean; 
+  type: "loading" | "success" | "error"; 
   message: string;
 }) {
   const { open, type, message } = props;
 
-  // Neutral pill by default; slight tint per type
-  const bg =
-    type === "success"
-      ? "bg-emerald-600/90"
-      : type === "error"
-      ? "bg-rose-600/90"
-      : "bg-zinc-800/90";
-
-  const ariaRole = type === "error" ? "alert" : "status";
-
   return (
     <motion.div
-      role={ariaRole}
-      aria-live={type === "error" ? "assertive" : "polite"}
-      initial={{ opacity: 0, y: 8 }}
+      role="status"
+      aria-live="polite"
+      initial={{ opacity: 0, y: -32 }}
       animate={{
         opacity: open ? 1 : 0,
-        y: open ? 0 : 8,
+        y: open ? 0 : -32,
         pointerEvents: open ? "auto" : "none",
       }}
-      transition={{ duration: 0.18 }}
-      className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50`}
+      transition={{
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
+      }}
+      className="fixed top-0 left-0 w-full flex justify-center z-50"
+      style={{ pointerEvents: open ? 'auto' : 'none' }}
     >
-      <div
-        className={`rounded-full ${bg} text-white/95 text-xs px-3.5 py-2 shadow-lg backdrop-blur-md border border-white/10`}
-      >
-        {message}
+      <div className="relative w-full max-w-2xl mx-auto mt-4">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/10 rounded-xl" />
+        <div className="relative flex items-center gap-3 px-6 py-4">
+          {type === "loading" && (
+            <div className="relative w-5 h-5">
+              <div className="absolute inset-0 rounded-full border-2 border-white/30" />
+              <div className="absolute inset-0 rounded-full border-2 border-t-white border-r-transparent border-b-transparent border-l-transparent animate-spin" />
+            </div>
+          )}
+          {type === "success" && (
+            <svg 
+              className="w-5 h-5 text-white" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M5 13l4 4L19 7" 
+              />
+            </svg>
+          )}
+          {type === "error" && (
+            <svg 
+              className="w-5 h-5 text-white" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M6 18L18 6M6 6l12 12" 
+              />
+            </svg>
+          )}
+          <span className="text-sm font-medium text-white text-center select-none">
+            {message}
+          </span>
+        </div>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
       </div>
     </motion.div>
   );
