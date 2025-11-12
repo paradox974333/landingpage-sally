@@ -1,4 +1,3 @@
-// components/Carousel.tsx
 "use client";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import React, { useState, useId } from "react";
@@ -23,29 +22,27 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
   const { src, title, component } = slide;
   const isComponent = Boolean(component);
 
-  const baseLi = "relative shrink-0 flex items-center justify-center px-4 sm:px-6";
+  const baseLi = "relative shrink-0 flex items-center justify-center";
 
-  // Desktop keeps width by track variables; mobile is fluid (no fixed width)
   const desktopLiStyle: React.CSSProperties = { width: "calc(var(--cardW) + var(--gapR))" };
 
   return (
     <li
       className={
         variant === "mobile"
-          ? `${baseLi} snap-center flex-none basis-full w-full max-w-full`
-          : baseLi
+          ? `${baseLi} snap-center flex-none w-full px-3`
+          : `${baseLi} px-4 sm:px-6`
       }
       onClick={() => handleSlideClick(index)}
       aria-current={current === index}
       style={variant === "desktop" ? desktopLiStyle : undefined}
     >
-      {/* Card with different aspect ratios: portrait on mobile, landscape on desktop */}
       <div
-        className="relative bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-auto"
+        className="relative bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-auto w-full"
         style={{ 
           aspectRatio: variant === "mobile" ? "9 / 16" : "16 / 9", 
           width: variant === "desktop" ? "var(--cardW)" : "100%",
-          maxWidth: variant === "mobile" ? "500px" : undefined
+          maxWidth: variant === "mobile" ? "calc(100vw - 2rem)" : undefined
         }}
       >
         {!isComponent && (
@@ -63,7 +60,6 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
 
         {isComponent && <div className="absolute inset-0 bg-black">{component}</div>}
 
-        {/* Universal overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-end p-6 sm:p-8 text-center">
           <article className="w-full max-w-xl">
             <h3 className="text-xs sm:text-sm tracking-widest text-white/80 uppercase">Sally AI</h3>
@@ -118,7 +114,6 @@ export function Carousel({ slides }: CarouselProps) {
   const [current, setCurrent] = useState(() => Math.floor(slides.length / 2));
   const id = useId();
 
-  // Desktop center-mode sizing
   const CARD_WIDTH_CLAMP = "clamp(280px, 80vw, 1200px)";
   const GAP_REM = 2;
 
@@ -147,13 +142,22 @@ export function Carousel({ slides }: CarouselProps) {
         } as React.CSSProperties
       }
     >
-      {/* Mobile track: fluid, full-width cards with snap - tall portrait cards */}
-      <div className="md:hidden relative w-full h-full">
+      <style>{`
+        .carousel-mobile-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .carousel-mobile-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
+      {/* Mobile track: fluid, full-width cards with snap */}
+      <div className="md:hidden relative w-full h-full overflow-hidden">
         <ul
-          className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-3 py-2 select-none h-full"
+          className="carousel-mobile-scroll flex overflow-x-auto snap-x snap-mandatory py-2 select-none h-full"
           style={{
             WebkitOverflowScrolling: "touch",
-            scrollPadding: "0 12px",
           }}
           role="listbox"
           aria-live="polite"
@@ -171,7 +175,7 @@ export function Carousel({ slides }: CarouselProps) {
         </ul>
       </div>
 
-      {/* Desktop track: center-mode - landscape cards */}
+      {/* Desktop track: center-mode */}
       <ul
         className="hidden md:flex absolute inset-0 items-center h-full transition-transform duration-700 ease-out will-change-transform"
         style={{
