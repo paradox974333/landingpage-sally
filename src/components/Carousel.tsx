@@ -1,6 +1,6 @@
 "use client";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
-import React, { useState, useId } from "react";
+import React, { useState, useId, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 interface SlideData {
@@ -21,16 +21,14 @@ interface SlideProps {
 const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }: SlideProps) => {
   const { src, title, component } = slide;
   const isComponent = Boolean(component);
-
   const baseLi = "relative shrink-0 flex items-center justify-center";
-
   const desktopLiStyle: React.CSSProperties = { width: "calc(var(--cardW) + var(--gapR))" };
 
   return (
     <li
       className={
         variant === "mobile"
-          ? `${baseLi} snap-center flex-none w-full px-3`
+          ? `${baseLi} flex-none w-full px-3`
           : `${baseLi} px-4 sm:px-6`
       }
       onClick={() => handleSlideClick(index)}
@@ -39,10 +37,10 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
     >
       <div
         className="relative bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-auto w-full"
-        style={{ 
-          aspectRatio: variant === "mobile" ? "9 / 16" : "16 / 9", 
+        style={{
+          aspectRatio: variant === "mobile" ? "9 / 16" : "16 / 9",
           width: variant === "desktop" ? "var(--cardW)" : "100%",
-          maxWidth: variant === "mobile" ? "calc(100vw - 2rem)" : undefined
+          maxWidth: variant === "mobile" ? "calc(100vw - 2rem)" : undefined,
         }}
       >
         {!isComponent && (
@@ -57,7 +55,6 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
           </>
         )}
-
         {isComponent && <div className="absolute inset-0 bg-black">{component}</div>}
 
         <div className="absolute inset-0 flex flex-col items-center justify-end p-6 sm:p-8 text-center">
@@ -91,20 +88,19 @@ interface CarouselControlProps {
   title: string;
   handleClick: () => void;
 }
-const CarouselControl = ({ type, title, handleClick }: CarouselControlProps) => {
-  return (
-    <button
-      className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200/70 dark:bg-neutral-800/70 backdrop-blur border-3 border-transparent rounded-full focus:border-[#6D64F7] focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${
-        type === "previous" ? "rotate-180" : ""
-      }`}
-      title={title}
-      onClick={handleClick}
-      aria-label={title}
-    >
-      <IconArrowNarrowRight className="text-neutral-700 dark:text-neutral-100" />
-    </button>
-  );
-};
+
+const CarouselControl = ({ type, title, handleClick }: CarouselControlProps) => (
+  <button
+    className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200/70 dark:bg-neutral-800/70 backdrop-blur border-3 border-transparent rounded-full focus:border-[#6D64F7] focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${
+      type === "previous" ? "rotate-180" : ""
+    }`}
+    title={title}
+    onClick={handleClick}
+    aria-label={title}
+  >
+    <IconArrowNarrowRight className="text-neutral-700 dark:text-neutral-100" />
+  </button>
+);
 
 interface CarouselProps {
   slides: SlideData[];
@@ -117,17 +113,68 @@ export function Carousel({ slides }: CarouselProps) {
   const CARD_WIDTH_CLAMP = "clamp(280px, 80vw, 1200px)";
   const GAP_REM = 2;
 
+  // Refs for mobile viewport and track
+  const mobileViewportRef = useRef<HTMLDivElement | null>(null);
+  const mobileTrackRef = useRef<HTMLUListElement | null>(null);
+
+  // Mobile step = viewport width in px to keep the centered card centered in each full-width slide
+  const [mobileStep, setMobileStep] = useState(0);
+
   const handlePreviousClick = () => {
-    const previous = current - 1;
-    setCurrent(previous < 0 ? slides.length - 1 : previous);
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   };
+
   const handleNextClick = () => {
-    const next = current + 1;
-    setCurrent(next === slides.length ? 0 : next);
+    setCurrent((prev) => (prev + 1) % slides.length);
   };
+
   const handleSlideClick = (index: number) => {
     if (current !== index) setCurrent(index);
   };
+
+  const AUTOPLAY_MS = 3500;
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, AUTOPLAY_MS);
+    return () => window.clearInterval(interval);
+  }, [slides.length]);
+
+  // Measure mobile viewport width for step size and keep it updated on resize
+  useEffect(() => {
+    const measure = () => {
+      const vp = mobileViewportRef.current;
+      if (!vp) return;
+      // clientWidth includes padding and matches the visible viewport area for the container
+      setMobileStep(vp.clientWidth);
+    };
+
+    measure();
+
+    const vp = mobileViewportRef.current;
+    let ro: ResizeObserver | null = null;
+    if (vp && "ResizeObserver" in window) {
+      ro = new ResizeObserver(() => {
+        measure();
+      });
+      ro.observe(vp);
+    }
+
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+      if (ro) ro.disconnect();
+    };
+  }, []);
+
+  // Mobile transform shifts the track by one viewport width per slide
+  const mobileTransform = mobileStep
+    ? `translateX(${-current * mobileStep}px)`
+    : undefined;
 
   return (
     <div
@@ -143,22 +190,27 @@ export function Carousel({ slides }: CarouselProps) {
       }
     >
       <style>{`
-        .carousel-mobile-scroll::-webkit-scrollbar {
-          display: none;
+        .carousel-mobile-scroll {
+          display: flex;
+          transition: transform 0.7s ease-out;
+          will-change: transform;
+          user-select: none;
+          overflow: visible !important;
         }
+        .carousel-mobile-scroll::-webkit-scrollbar { display: none; }
         .carousel-mobile-scroll {
           -ms-overflow-style: none;
           scrollbar-width: none;
+          scroll-snap-type: none !important;
         }
       `}</style>
 
-      {/* Mobile track: fluid, full-width cards with snap */}
-      <div className="md:hidden relative w-full h-full overflow-hidden">
+      {/* Mobile track with transform animation */}
+      <div ref={mobileViewportRef} className="md:hidden relative w-full h-full overflow-hidden">
         <ul
-          className="carousel-mobile-scroll flex overflow-x-auto snap-x snap-mandatory py-2 select-none h-full"
-          style={{
-            WebkitOverflowScrolling: "touch",
-          }}
+          ref={mobileTrackRef}
+          className="carousel-mobile-scroll"
+          style={{ transform: mobileTransform }}
           role="listbox"
           aria-live="polite"
         >

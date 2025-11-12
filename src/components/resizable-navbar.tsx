@@ -262,7 +262,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
       style={{
         WebkitBackdropFilter: visible ? "blur(16px) saturate(1.8)" : "none",
         background: visible
-          ? "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10))"
+          ? "linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255,255,255,0.10))"
           : "transparent",
         border: visible ? "1px solid rgba(255,255,255,0.22)" : "transparent",
       }}
