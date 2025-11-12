@@ -39,10 +39,14 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
       aria-current={current === index}
       style={variant === "desktop" ? desktopLiStyle : undefined}
     >
-      {/* 16:9 Landscape Card */}
+      {/* Card with different aspect ratios: portrait on mobile, landscape on desktop */}
       <div
         className="relative bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-auto"
-        style={{ aspectRatio: "16 / 9", width: variant === "desktop" ? "var(--cardW)" : "100%" }}
+        style={{ 
+          aspectRatio: variant === "mobile" ? "9 / 16" : "16 / 9", 
+          width: variant === "desktop" ? "var(--cardW)" : "100%",
+          maxWidth: variant === "mobile" ? "500px" : undefined
+        }}
       >
         {!isComponent && (
           <>
@@ -143,10 +147,10 @@ export function Carousel({ slides }: CarouselProps) {
         } as React.CSSProperties
       }
     >
-      {/* Mobile track: fluid, full-width cards with snap */}
-      <div className="md:hidden relative w-full">
+      {/* Mobile track: fluid, full-width cards with snap - tall portrait cards */}
+      <div className="md:hidden relative w-full h-full">
         <ul
-          className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-3 py-2 select-none"
+          className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-3 py-2 select-none h-full"
           style={{
             WebkitOverflowScrolling: "touch",
             scrollPadding: "0 12px",
@@ -167,7 +171,7 @@ export function Carousel({ slides }: CarouselProps) {
         </ul>
       </div>
 
-      {/* Desktop track: center-mode */}
+      {/* Desktop track: center-mode - landscape cards */}
       <ul
         className="hidden md:flex absolute inset-0 items-center h-full transition-transform duration-700 ease-out will-change-transform"
         style={{
