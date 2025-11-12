@@ -30,15 +30,25 @@ function NavbarDemo() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="w-full bg-transparent">
+    // Make container relative to satisfy any scroll/offset calculations from motion/observers
+    <div className="w-full bg-transparent relative">
       <Navbar>
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
+
           <div className="flex items-center gap-3 sm:gap-4">
+            {/* Keep as actual button */}
             <NavbarButton variant="secondary">Login</NavbarButton>
-            <Link to="/wishlist">
-              <NavbarButton variant="primary">Get Access</NavbarButton>
+
+            {/* Replace Link-wrapped NavbarButton (a-in-a) with a single Link styled as a button */}
+            <Link
+              to="/wishlist"
+              className="inline-flex items-center justify-center rounded-full p-2 text-sm font-semibold leading-6 text-white shadow-2xl shadow-zinc-900 ring-1 ring-white/10 bg-slate-800"
+            >
+              <span className="relative flex items-center space-x-2 rounded-full bg-zinc-950 py-1.5 px-6 ring-1 ring-white/10">
+                <span>Get Access</span>
+              </span>
             </Link>
           </div>
         </NavBody>
@@ -66,7 +76,9 @@ function NavbarDemo() {
                 <span className="block">{item.name}</span>
               </a>
             ))}
+
             <div className="flex w-full flex-col gap-4">
+              {/* Keep Login as a button */}
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
@@ -74,14 +86,14 @@ function NavbarDemo() {
               >
                 Login
               </NavbarButton>
-              <Link to="/wishlist" className="w-full">
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="primary"
-                  className="w-full"
-                >
-                  Get Access
-                </NavbarButton>
+
+              {/* Replace Link + NavbarButton with a single Link styled as a button (no nested <a>) */}
+              <Link
+                to="/wishlist"
+                className="w-full inline-flex items-center justify-center rounded-2xl bg-zinc-950 text-white py-3 ring-1 ring-white/10"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Get Access
               </Link>
             </div>
           </MobileNavMenu>
@@ -106,7 +118,6 @@ export function CarouselDemo() {
     },
     {
       title: "Hyperspeed",
-      // Render Hyperspeed inside the card, filling the 16:9 frame
       component: (
         <Hyperspeed
           effectOptions={{
@@ -156,8 +167,9 @@ export function CarouselDemo() {
     },
   ];
 
+  // Mobile: h-auto (card dictates height); Desktop: full-height hero; black background for clean edges
   return (
-    <div className="relative w-full h-[100svh] md:h-screen flex items-center justify-center bg-black">
+    <div className="relative w-full h-auto md:h-screen flex items-center justify-center bg-black py-4 md:py-8">
       <Carousel slides={slideData} />
     </div>
   );
@@ -192,15 +204,16 @@ function Home() {
         </div>
       </header>
 
-      {/* Carousel Hero Section - Full Height */}
+      {/* Carousel Hero Section */}
       <main
         className="w-full"
         style={{
-          // Add safe-area padding plus navbar height to prevent overlap on devices with notches
+          // Safe-area top + navbar height to avoid overlap under notches/status bars
           paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)",
         }}
       >
-        <section className="relative w-full h-[100svh] md:h-screen overflow-hidden bg-black">
+        {/* Mobile: h-auto to avoid forced 100vh gaps; Desktop: full height */}
+        <section className="relative w-full h-auto md:h-screen overflow-hidden bg-black">
           <CarouselDemo />
         </section>
 
@@ -215,7 +228,7 @@ function Home() {
               An AI trading agent for market analysis, automated execution, and dynamic portfolio rebalancing—built to operate 24/7 with risk-first controls.
             </p>
             <div className="mt-8">
-              <Link to="/wishlist">
+              <Link to="/wishlist" className="inline-block">
                 <button className="bg-slate-800 group relative shadow-2xl shadow-zinc-900 rounded-full p-2 text-sm font-semibold leading-6 text-white inline-block">
                   <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-1.5 px-6 ring-1 ring-white/10">
                     <span>Get Access</span>
