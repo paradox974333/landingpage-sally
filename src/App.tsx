@@ -1,4 +1,3 @@
-// App.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -30,7 +29,6 @@ function NavbarDemo() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    // Make container relative to satisfy any scroll/offset calculations from motion/observers
     <div className="w-full bg-transparent relative">
       <Navbar>
         <NavBody>
@@ -38,10 +36,8 @@ function NavbarDemo() {
           <NavItems items={navItems} />
 
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Keep as actual button */}
             <NavbarButton variant="secondary">Login</NavbarButton>
 
-            {/* Replace Link-wrapped NavbarButton (a-in-a) with a single Link styled as a button */}
             <Link
               to="/wishlist"
               className="inline-flex items-center justify-center rounded-full p-2 text-sm font-semibold leading-6 text-white shadow-2xl shadow-zinc-900 ring-1 ring-white/10 bg-slate-800"
@@ -78,7 +74,6 @@ function NavbarDemo() {
             ))}
 
             <div className="flex w-full flex-col gap-4">
-              {/* Keep Login as a button */}
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
@@ -87,7 +82,6 @@ function NavbarDemo() {
                 Login
               </NavbarButton>
 
-              {/* Replace Link + NavbarButton with a single Link styled as a button (no nested <a>) */}
               <Link
                 to="/wishlist"
                 className="w-full inline-flex items-center justify-center rounded-2xl bg-zinc-950 text-white py-3 ring-1 ring-white/10"
@@ -167,7 +161,6 @@ export function CarouselDemo() {
     },
   ];
 
-  // Mobile: h-auto (card dictates height); Desktop: full-height hero; black background for clean edges
   return (
     <div className="relative w-full h-auto md:h-screen flex items-center justify-center bg-black py-4 md:py-8">
       <Carousel slides={slideData} />
@@ -188,36 +181,37 @@ function Home() {
 
   return (
     <div
-      className="w-full bg-black text-white min-h-screen"
+      className="w-screen bg-black text-white min-h-screen overflow-x-hidden"
       style={{ fontFamily: "'Space Grotesk', 'Inter', 'Poppins', sans-serif" }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        html, body {
+          margin: 0; padding: 0; 
+          overflow-x: hidden;
+          width: 100vw; 
+          max-width: 100vw;
+        }
         html { scroll-behavior: smooth; }
       `}</style>
 
-      {/* Navbar placed above the carousel, fixed */}
       <header className="w-full z-50 bg-transparent fixed top-0 left-0">
         <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <NavbarDemo />
         </div>
       </header>
 
-      {/* Carousel Hero Section */}
       <main
         className="w-full"
         style={{
-          // Safe-area top + navbar height to avoid overlap under notches/status bars
           paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)",
         }}
       >
-        {/* Mobile: h-auto to avoid forced 100vh gaps; Desktop: full height */}
         <section className="relative w-full h-auto md:h-screen overflow-hidden bg-black">
           <CarouselDemo />
         </section>
 
-        {/* Intro Section */}
         <section
           id="intro"
           className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-14 sm:py-20 px-3 sm:px-4"
@@ -239,7 +233,6 @@ function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
         <section id="features" className="w-full bg-black py-10 md:py-16 px-3 sm:px-4">
           <FeaturesSection />
         </section>
