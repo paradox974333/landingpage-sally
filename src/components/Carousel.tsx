@@ -7,6 +7,7 @@ interface SlideData {
   title: string;
   button?: string;
   src?: string;
+  video?: string; // ✅ Added video support
   component?: React.ReactNode;
 }
 
@@ -19,8 +20,9 @@ interface SlideProps {
 }
 
 const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }: SlideProps) => {
-  const { src, title, component } = slide;
+  const { src, video, title, component } = slide;
   const isComponent = Boolean(component);
+  const isVideo = Boolean(video);
   const baseLi = "relative shrink-0 flex items-center justify-center";
   const desktopLiStyle: React.CSSProperties = { width: "calc(var(--cardW) + var(--gapR))" };
 
@@ -43,7 +45,23 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
           maxWidth: variant === "mobile" ? "calc(100vw - 2rem)" : undefined,
         }}
       >
-        {!isComponent && (
+        {/* 🔥 VIDEO SUPPORT */}
+        {isVideo && !isComponent && (
+          <>
+            <video
+              src={video}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
+          </>
+        )}
+
+        {/* IMAGE */}
+        {!isComponent && !isVideo && (
           <>
             <img
               className="absolute inset-0 w-full h-full object-cover"
@@ -55,8 +73,13 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
           </>
         )}
-        {isComponent && <div className="absolute inset-0 bg-black">{component}</div>}
 
+        {/* COMPONENT */}
+        {isComponent && (
+          <div className="absolute inset-0 bg-black">{component}</div>
+        )}
+
+        {/* TEXT CONTENT */}
         <div className="absolute inset-0 flex flex-col items-center justify-end p-6 sm:p-8 text-center">
           <article className="w-full max-w-xl">
             <h3 className="text-xs sm:text-sm tracking-widest text-white/80 uppercase"></h3>
@@ -113,11 +136,9 @@ export function Carousel({ slides }: CarouselProps) {
   const CARD_WIDTH_CLAMP = "clamp(280px, 80vw, 1200px)";
   const GAP_REM = 2;
 
-  // Refs for mobile viewport and track
   const mobileViewportRef = useRef<HTMLDivElement | null>(null);
   const mobileTrackRef = useRef<HTMLUListElement | null>(null);
 
-  // Mobile step = viewport width in px to keep the centered card centered in each full-width slide
   const [mobileStep, setMobileStep] = useState(0);
 
   const handlePreviousClick = () => {
@@ -141,12 +162,10 @@ export function Carousel({ slides }: CarouselProps) {
     return () => window.clearInterval(interval);
   }, [slides.length]);
 
-  // Measure mobile viewport width for step size and keep it updated on resize
   useEffect(() => {
     const measure = () => {
       const vp = mobileViewportRef.current;
       if (!vp) return;
-      // clientWidth includes padding and matches the visible viewport area for the container
       setMobileStep(vp.clientWidth);
     };
 
@@ -155,9 +174,7 @@ export function Carousel({ slides }: CarouselProps) {
     const vp = mobileViewportRef.current;
     let ro: ResizeObserver | null = null;
     if (vp && "ResizeObserver" in window) {
-      ro = new ResizeObserver(() => {
-        measure();
-      });
+      ro = new ResizeObserver(() => measure());
       ro.observe(vp);
     }
 
@@ -171,7 +188,6 @@ export function Carousel({ slides }: CarouselProps) {
     };
   }, []);
 
-  // Mobile transform shifts the track by one viewport width per slide
   const mobileTransform = mobileStep
     ? `translateX(${-current * mobileStep}px)`
     : undefined;
@@ -182,9 +198,7 @@ export function Carousel({ slides }: CarouselProps) {
       aria-labelledby={`carousel-heading-${id}`}
       style={
         {
-          // @ts-ignore
           "--cardW": CARD_WIDTH_CLAMP,
-          // @ts-ignore
           "--gapR": `${GAP_REM}rem`,
         } as React.CSSProperties
       }
@@ -205,7 +219,7 @@ export function Carousel({ slides }: CarouselProps) {
         }
       `}</style>
 
-      {/* Mobile track with transform animation */}
+      {/* Mobile track */}
       <div ref={mobileViewportRef} className="md:hidden relative w-full h-full overflow-hidden">
         <ul
           ref={mobileTrackRef}
@@ -227,7 +241,7 @@ export function Carousel({ slides }: CarouselProps) {
         </ul>
       </div>
 
-      {/* Desktop track: center-mode */}
+      {/* Desktop track */}
       <ul
         className="hidden md:flex absolute inset-0 items-center h-full transition-transform duration-700 ease-out will-change-transform"
         style={{
