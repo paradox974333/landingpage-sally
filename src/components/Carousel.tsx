@@ -153,7 +153,7 @@ export function Carousel({ slides }: CarouselProps) {
     if (current !== index) setCurrent(index);
   };
 
-  const AUTOPLAY_MS = 6500;
+  const AUTOPLAY_MS = 8500;
 
   useEffect(() => {
     const interval = window.setInterval(() => {
