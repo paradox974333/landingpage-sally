@@ -103,12 +103,12 @@ export function CarouselDemo() {
     {
       title: "SALLY AI",
       button: "Explore Component",
-      video: "public/Trading Agent.mp4",
+      video: "Trading Agent.mp4",
     },
     {
       title: "SALLY AI",
       button: "Explore Component",
-      src: "public/Trading Agent.png",
+      src: "Trading Agent.png",
     },
     {
       title: "SALLY AI",
