@@ -20,12 +20,16 @@ import { WishlistForm } from "./components/WishlistForm";
 import { Carousel } from "./components/Carousel";
 import Hyperspeed from "./components/Hyperspeed";
 
-// ---------------- NAVBAR ----------------
+// ✅ FIXED — default import (correct for 99% of cases)
+import SallyMCPSection from "./components/SallyMCPSection";
+
+/* -------------------------------- NAVBAR -------------------------------- */
 function NavbarDemo() {
   const navItems = [
     { name: "Features", link: "#features" },
     { name: "About", link: "https://imperialx.io/whitepaper" },
   ];
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -97,7 +101,7 @@ function NavbarDemo() {
   );
 }
 
-// ---------------- CAROUSEL DEMO (16:9 landscape) ----------------
+/* ----------------------------- CAROUSEL DEMO ----------------------------- */
 export function CarouselDemo() {
   const slideData = [
     {
@@ -163,7 +167,7 @@ export function CarouselDemo() {
   );
 }
 
-// ---------------- HOME ----------------
+/* ---------------------------------- HOME ---------------------------------- */
 function Home() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -182,12 +186,7 @@ function Home() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        html, body {
-          margin: 0; padding: 0; 
-          overflow-x: hidden;
-          width: 100vw; 
-          max-width: 100vw;
-        }
+        html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100vw; max-width: 100vw; }
         html { scroll-behavior: smooth; }
       `}</style>
 
@@ -199,22 +198,25 @@ function Home() {
 
       <main
         className="w-full"
-        style={{
-          paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)",
-        }}
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)" }}
       >
+        {/* HERO CAROUSEL */}
         <section className="relative w-full h-auto md:h-screen overflow-hidden bg-black">
           <CarouselDemo />
         </section>
 
+        {/* INTRO */}
         <section
           id="intro"
           className="w-full bg-gradient-to-b from-black via-[#0D0716] to-black py-14 sm:py-20 px-3 sm:px-4"
         >
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white">Introducing Sally</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white">
+              Introducing Sally
+            </h2>
             <p className="mt-4 text-base md:text-xl text-gray-300">
-              An AI trading agent for market analysis, automated execution, and dynamic portfolio rebalancing—built to operate 24/7 with risk-first controls.
+              An AI trading agent for market analysis, automated execution, and
+              dynamic portfolio rebalancing—built to operate 24/7 with risk-first controls.
             </p>
             <div className="mt-8">
               <Link to="/wishlist" className="inline-block">
@@ -228,15 +230,19 @@ function Home() {
           </div>
         </section>
 
+        {/* FEATURES */}
         <section id="features" className="w-full bg-black py-10 md:py-16 px-3 sm:px-4">
           <FeaturesSection />
         </section>
+
+        {/* ⭐ NEW: SALLY MCP SECTION WITH BEAMS */}
+        <SallyMCPSection />
       </main>
     </div>
   );
 }
 
-// ---------------- APP ENTRY ----------------
+/* ---------------------------------- APP ---------------------------------- */
 export default function App() {
   return (
     <Routes>
