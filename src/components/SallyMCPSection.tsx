@@ -5,15 +5,15 @@ import { AnimatedBeam } from "./AnimatedBeam";
 import SallyCircle from "./SallyCircle";
 import { cn } from "@/lib/utils";
 
-// Lucide Icons
+// Lucide Icons (proper + meaningful)
 import {
-  Database,
-  Cpu,
-  Bot,
-  Lock,
-  Server,
-  Brain,
-  LineChart,
+  Network,       // API Gateway
+  ShieldCheck,   // Auth
+  Database,      // DB
+  BrainCircuit,  // LLM / Model Engine
+  Bot,           // Central Sally
+  Activity,      // Logs / Monitoring
+  LineChart,     // Trader / Strategy
 } from "lucide-react";
 
 export default function SallyMCPSection() {
@@ -22,7 +22,7 @@ export default function SallyMCPSection() {
   const apiRef = useRef<HTMLDivElement>(null);
   const dbRef = useRef<HTMLDivElement>(null);
   const llmRef = useRef<HTMLDivElement>(null);
-  const sallyRef = useRef<HTMLDivElement>(null); // center
+  const sallyRef = useRef<HTMLDivElement>(null); 
   const authRef = useRef<HTMLDivElement>(null);
   const logsRef = useRef<HTMLDivElement>(null);
   const traderRef = useRef<HTMLDivElement>(null);
@@ -44,11 +44,11 @@ export default function SallyMCPSection() {
           {/* ROW 1 */}
           <div className="flex flex-row items-center justify-between">
             <SallyCircle ref={apiRef} className="text-white bg-black border-white">
-              <Server size={22} color="white" />
+              <Network size={22} color="white" />
             </SallyCircle>
 
             <SallyCircle ref={authRef} className="text-white bg-black border-white">
-              <Lock size={22} color="white" />
+              <ShieldCheck size={22} color="white" />
             </SallyCircle>
           </div>
 
@@ -64,14 +64,14 @@ export default function SallyMCPSection() {
             </SallyCircle>
 
             <SallyCircle ref={logsRef} className="text-white bg-black border-white">
-              <Cpu size={22} color="white" />
+              <Activity size={22} color="white" />
             </SallyCircle>
           </div>
 
           {/* ROW 3 */}
           <div className="flex flex-row items-center justify-between">
             <SallyCircle ref={llmRef} className="text-white bg-black border-white">
-              <Brain size={22} color="white" />
+              <BrainCircuit size={22} color="white" />
             </SallyCircle>
 
             <SallyCircle ref={traderRef} className="text-white bg-black border-white">

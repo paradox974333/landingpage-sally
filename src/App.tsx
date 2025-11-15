@@ -105,7 +105,7 @@ function NavbarDemo() {
 export function CarouselDemo() {
   const slideData = [
     {
-      title: "SALLY AI",
+      title: "CRASH DETECTION AGENT",
       button: "Explore Component",
       video: "Trading Agent.mp4",
     },
@@ -154,7 +154,7 @@ export function CarouselDemo() {
       ),
     },
     {
-      title: "SALLY AI",
+      title: "SIGNAL AGENT",
       button: "Explore Component",
       src: "Trading Agent.png",
     },
