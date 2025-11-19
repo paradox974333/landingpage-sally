@@ -638,9 +638,9 @@ function Footer() {
               <img 
                 src="logo.png" 
                 alt="Imperial X Logo" 
-                className="w-8 h-8 object-contain"
+                className="w-13 h-13 object-contain"
               />
-              <span className="text-2xl font-bold text-white tracking-tighter">Imperial X</span>
+              <span className="text-2xl font-bold text-white tracking-tighter"></span>
             </div>
             <p className="text-zinc-500 text-sm leading-relaxed">
               Building the next generation of autonomous financial agents.

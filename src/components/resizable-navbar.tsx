@@ -350,10 +350,10 @@ export const NavbarLogo = () => {
         src="logo.png"
         style={{ filter: "invert(1) brightness(2)" }}
         alt="logo"
-        width={30}
-        height={30}
+        width={50}
+        height={50}
       />
-      <span className="font-medium text-black dark:text-white">Imperial X</span>
+      
     </a>
   );
 };
