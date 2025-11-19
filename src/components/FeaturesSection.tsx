@@ -20,34 +20,34 @@ const Feature = ({ title, description, icon, index }) => {
         'flex flex-col lg:border-r py-10 relative group/feature',
         (index === 0 || index === 4) && 'lg:border-l',
         index < 4 && 'lg:border-b',
-        'border-neutral-800/60'
+        'border-zinc-800' // Dark borders to match the theme
       )}
     >
-      {/* glass card for black bg */}
-      <div className="absolute inset-3 rounded-2xl bg-black/60 ring-1 ring-white/5 group-hover/feature:ring-blue-400/30 transition-all duration-300 pointer-events-none" />
+      {/* Glass card effect */}
+      <div className="absolute inset-3 rounded-2xl bg-zinc-900/20 ring-1 ring-white/5 group-hover/feature:ring-blue-500/20 transition-all duration-300 pointer-events-none" />
 
-      {/* hover glow direction */}
+      {/* Hover glow direction */}
       {index < 4 ? (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 rounded-2xl bg-gradient-to-t from-blue-400/10 via-transparent to-transparent pointer-events-none" />
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 rounded-2xl bg-gradient-to-t from-blue-500/10 via-transparent to-transparent pointer-events-none" />
       ) : (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 rounded-2xl bg-gradient-to-b from-blue-400/10 via-transparent to-transparent pointer-events-none" />
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 rounded-2xl bg-gradient-to-b from-blue-500/10 via-transparent to-transparent pointer-events-none" />
       )}
 
-      <div className="mb-4 relative z-10 px-10 text-neutral-200">
-        <div className="text-blue-400 drop-shadow-[0_0_12px_rgba(56,189,248,0.35)]">
+      <div className="mb-4 relative z-10 px-10 text-zinc-200">
+        <div className="text-blue-500 drop-shadow-[0_0_12px_rgba(59,130,246,0.4)]">
           {icon}
         </div>
       </div>
 
       <div className="text-lg font-semibold mb-2 relative z-10 px-10">
-        {/* animated left bar */}
-        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-700 group-hover/feature:bg-blue-400 transition-all duration-200" />
-        <span className="inline-block text-neutral-50 group-hover/feature:translate-x-2 transition duration-200">
+        {/* Animated left bar */}
+        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-zinc-700 group-hover/feature:bg-blue-500 transition-all duration-200" />
+        <span className="inline-block text-zinc-50 group-hover/feature:translate-x-2 transition duration-200">
           {title}
         </span>
       </div>
 
-      <p className="text-sm leading-relaxed text-neutral-300 max-w-xs relative z-10 px-10">
+      <p className="text-sm leading-relaxed text-zinc-400 max-w-xs relative z-10 px-10">
         {description}
       </p>
     </div>
@@ -99,10 +99,8 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <div className="relative z-10 py-20 bg-black">
-      {/* top blue radial glow */}
-      <div className="pointer-events-none absolute -inset-x-10 -top-10 h-48 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.12),transparent_70%)]" />
-      
+    // UPDATED: Background color to #121317, removed top glow effect
+    <div className="relative z-10 py-20 bg-[#121317]">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {features.map((feature, index) => (
           <Feature key={feature.title} {...feature} index={index} />

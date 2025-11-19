@@ -1,5 +1,5 @@
 "use client";
-import { IconArrowNarrowRight } from "@tabler/icons-react";
+import { IconArrowNarrowRight, IconArrowNarrowLeft } from "@tabler/icons-react";
 import React, { useState, useId, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
@@ -7,7 +7,7 @@ interface SlideData {
   title: string;
   button?: string;
   src?: string;
-  video?: string; // ✅ Added video support
+  video?: string;
   component?: React.ReactNode;
 }
 
@@ -38,7 +38,8 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
       style={variant === "desktop" ? desktopLiStyle : undefined}
     >
       <div
-        className="relative bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-auto w-full"
+        // UPDATED: bg-[#121317] for the card + subtle border and shadow to separate from main bg
+        className="relative bg-[#121317] rounded-3xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10 mx-auto w-full transition-all duration-500"
         style={{
           aspectRatio: variant === "mobile" ? "9 / 16" : "16 / 9",
           width: variant === "desktop" ? "var(--cardW)" : "100%",
@@ -50,13 +51,13 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
           <>
             <video
               src={video}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover opacity-90" // Slight opacity to blend
               autoPlay
               loop
               muted
               playsInline
             />
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#121317] via-transparent to-transparent" />
           </>
         )}
 
@@ -64,37 +65,36 @@ const Slide = ({ slide, index, current, handleSlideClick, variant = "desktop" }:
         {!isComponent && !isVideo && (
           <>
             <img
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover opacity-90"
               alt={title}
               src={src}
               loading="eager"
               decoding="sync"
             />
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#121317] via-transparent to-transparent" />
           </>
         )}
 
         {/* COMPONENT */}
         {isComponent && (
-          <div className="absolute inset-0 bg-black">{component}</div>
+          <div className="absolute inset-0 bg-[#121317]">{component}</div>
         )}
 
         {/* TEXT CONTENT */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end p-6 sm:p-8 text-center">
-          <article className="w-full max-w-xl">
-            <h3 className="text-xs sm:text-sm tracking-widest text-white/80 uppercase"></h3>
-            <h2 className="mt-1 text-2xl md:text-4xl lg:text-5xl font-semibold text-white drop-shadow">
+        <div className="absolute inset-0 flex flex-col items-center justify-end p-8 sm:p-12 text-center z-20">
+          <article className="w-full max-w-2xl">
+            <h2 className="mt-1 text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-lg">
               {title}
             </h2>
-            <p className="mt-3 text-white/80 text-sm md:text-base">
+            <p className="mt-4 text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
               24/7 trading agent for market analysis, automated execution, and risk-first rebalancing.
             </p>
-            <div className="mt-6 flex justify-center">
+            <div className="mt-8 flex justify-center">
               <Link
                 to="/wishlist"
-                className="bg-slate-800 group relative shadow-2xl shadow-zinc-900 rounded-full p-2 text-sm font-semibold leading-6 text-white inline-block"
+                className="bg-slate-800 group relative shadow-2xl shadow-zinc-950 rounded-full p-1 text-sm font-semibold leading-6 text-white inline-block"
               >
-                <span className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-1.5 px-6 ring-1 ring-white/10">
+                <span className="relative flex space-x-2 items-center z-10 rounded-full bg-[#121317] py-2 px-8 ring-1 ring-white/10 hover:bg-zinc-900 transition-all duration-300">
                   <span>Get Access</span>
                 </span>
               </Link>
@@ -113,15 +113,18 @@ interface CarouselControlProps {
 }
 
 const CarouselControl = ({ type, title, handleClick }: CarouselControlProps) => (
+  // UPDATED: Better UI for controls (dark glassmorphism)
   <button
-    className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200/70 dark:bg-neutral-800/70 backdrop-blur border-3 border-transparent rounded-full focus:border-[#6D64F7] focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${
-      type === "previous" ? "rotate-180" : ""
-    }`}
+    className={`w-12 h-12 flex items-center mx-2 justify-center bg-zinc-900/50 hover:bg-zinc-800 backdrop-blur-md border border-white/10 rounded-full focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all duration-300 group`}
     title={title}
     onClick={handleClick}
     aria-label={title}
   >
-    <IconArrowNarrowRight className="text-neutral-700 dark:text-neutral-100" />
+    {type === "previous" ? (
+      <IconArrowNarrowLeft className="text-zinc-400 group-hover:text-white transition-colors" size={24} />
+    ) : (
+      <IconArrowNarrowRight className="text-zinc-400 group-hover:text-white transition-colors" size={24} />
+    )}
   </button>
 );
 
@@ -193,8 +196,9 @@ export function Carousel({ slides }: CarouselProps) {
     : undefined;
 
   return (
+    // UPDATED: bg-[#121317]
     <div
-      className="relative w-full h-full overflow-hidden bg-black"
+      className="relative w-full h-full overflow-hidden bg-[#121317]"
       aria-labelledby={`carousel-heading-${id}`}
       style={
         {
@@ -206,7 +210,7 @@ export function Carousel({ slides }: CarouselProps) {
       <style>{`
         .carousel-mobile-scroll {
           display: flex;
-          transition: transform 0.7s ease-out;
+          transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
           will-change: transform;
           user-select: none;
           overflow: visible !important;
@@ -243,7 +247,7 @@ export function Carousel({ slides }: CarouselProps) {
 
       {/* Desktop track */}
       <ul
-        className="hidden md:flex absolute inset-0 items-center h-full transition-transform duration-700 ease-out will-change-transform"
+        className="hidden md:flex absolute inset-0 items-center h-full transition-transform duration-700 cubic-bezier(0.25, 1, 0.5, 1) will-change-transform"
         style={{
           transform: `translateX(calc(${-current} * (var(--cardW) + var(--gapR)) + (50vw - (var(--cardW) / 2))))`,
         }}
@@ -262,8 +266,8 @@ export function Carousel({ slides }: CarouselProps) {
         ))}
       </ul>
 
-      {/* Desktop controls */}
-      <div className="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 items-center justify-center">
+      {/* Desktop controls - Clean Dark UI */}
+      <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 items-center justify-center gap-4 z-30">
         <CarouselControl type="previous" title="Go to previous slide" handleClick={handlePreviousClick} />
         <CarouselControl type="next" title="Go to next slide" handleClick={handleNextClick} />
       </div>
