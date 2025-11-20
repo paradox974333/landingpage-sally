@@ -344,14 +344,13 @@ export const NavbarLogo = () => {
   return (
     <a
       href="https://imperialx.io"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
+      className="relative z-20  flex items-center space-x-2 px- py-1 text-sm font-normal text-black"
     >
       <img
         src="logo.png"
-        style={{ filter: "invert(1) brightness(2)" }}
+        
         alt="logo"
-        width={50}
-        height={50}
+       className="w-[10px] md:w-[100px] h-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-500"
       />
       
     </a>
