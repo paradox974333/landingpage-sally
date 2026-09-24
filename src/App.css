@@ -1,4 +1,4 @@
-#root { overflow: hidden; }
+#root { overflow-x: clip; }
 :root { --ink: #202a25; --muted: #626c63; --paper: #f6f5ef; --sage: #dfe9d9; --line: rgba(32,42,37,.14); --lime: #dfff68; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 90px; }
