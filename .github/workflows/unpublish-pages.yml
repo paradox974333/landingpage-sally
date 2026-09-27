@@ -1,0 +1,16 @@
+name: Remove Sally AI GitHub Pages site
+
+on:
+  workflow_dispatch:
+
+permissions:
+  pages: write
+
+jobs:
+  unpublish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete GitHub Pages configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method DELETE "repos/${GITHUB_REPOSITORY}/pages"
